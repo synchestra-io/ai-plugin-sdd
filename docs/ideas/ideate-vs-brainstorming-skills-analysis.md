@@ -177,7 +177,34 @@ I recommend **Path B**. The two skills solve genuinely different problems — co
 
 ### 7.1 SpecScore Alignment
 
-The fundamental shift vs. both upstream skills: **outputs are not freeform markdown; they are SpecScore artifacts with schemas**.
+The fundamental shift vs. both upstream skills: **outputs are not freeform markdown; they are SpecScore artifacts with schemas**, and they live in `spec/` — not `docs/`.
+
+#### Path Conventions: `spec/` vs. `docs/`
+
+This split is a core SpecScore convention and one of the deliberate overrides of the upstream skills:
+
+| Tree | Purpose | Audience | Format | Tooling |
+|---|---|---|---|---|
+| `spec/` | Machine-addressable SpecScore artifacts (ideas, features, requirements, acceptance criteria, plans) | Tooling (`specscore lint`, Rehearse, Synchestra agents) and contributors editing specs | Typed: YAML front-matter + structured body sections | Lintable, schema-validated, stable IDs, bidirectional links |
+| `docs/` | User-facing prose | Human readers of the project (users, adopters, reviewers) | Freeform markdown | Rendered as-is; no schema constraints |
+
+**Consequences for the skills:**
+
+- Ideas go in **`spec/ideas/<slug>.md`** (not `docs/ideas/` as upstream `idea-refine` does). Lintable. Promotable to Features inside the same tree.
+- Features go in **`spec/features/<slug>/README.md`** with `spec/features/<slug>/requirements/*.md` (not `docs/superpowers/specs/YYYY-MM-DD-*.md` as upstream `brainstorming` does). Date goes in front-matter, not the filename.
+- Plans go in **`spec/plans/<slug>/`** — same pattern.
+- `docs/` stays clean for guides, tutorials, READMEs, ADRs written for humans.
+- Promotion links (`promotes_to`, `supersedes`, `depends_on`) resolve as relative paths within `spec/`, so a single tree move or rename doesn't cross a boundary.
+
+**Overrides from upstream skills:**
+
+| Upstream convention | SpecScore override | Why |
+|---|---|---|
+| `idea-refine` → `docs/ideas/<name>.md` (optional save) | `spec/ideas/<slug>.md` (mandatory, lintable) | Ideas are typed artifacts, not prose; unsaved ideation is waste |
+| `brainstorming` → `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` | `spec/features/<slug>/README.md` | Dates belong in front-matter; slugs are stable IDs; Features have sub-artifacts (requirements) |
+| Either skill producing freeform markdown | YAML front-matter + schema-validated body | Required for `specscore lint` + Synchestra addressability |
+
+This convention should be codified in a shared spine file (`skills/shared/path-conventions.md`) that both `sdd-ideate` and `sdd-design` reference, so future SDD skills don't drift.
 
 | Artifact | Location | Schema |
 |---|---|---|
@@ -487,6 +514,7 @@ skills/
 └── shared/
     ├── philosophy.md                  ← Jobs-flavored + simplicity tenets
     ├── question-cadence.md            ← when to batch vs one-at-a-time
+    ├── path-conventions.md            ← spec/ vs docs/ rules (see §7.1)
     └── specscore-lint-rules.md        ← lint rules both skills assume
 ```
 
@@ -526,6 +554,7 @@ skills/
 |---|---|
 | P0 | Resolve Open Question 1, 2, 4 — these unblock schema authoring |
 | P0 | Write `shared/specscore-lint-rules.md` with rules both skills assume |
+| P0 | Write `shared/path-conventions.md` codifying `spec/` vs `docs/` split |
 | P1 | Draft `sdd-ideate/SKILL.md` per outline in §8.1 |
 | P1 | Draft `sdd-design/SKILL.md` per outline in §8.2 |
 | P1 | Port `frameworks.md` and `refinement-criteria.md` verbatim from `idea-refine` (MIT/permissive license permitting) |
