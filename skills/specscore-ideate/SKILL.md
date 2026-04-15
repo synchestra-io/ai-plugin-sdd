@@ -34,7 +34,7 @@ Ideas that can't be lint-clean aren't ready to be designed.
 
 ## Philosophy
 
-See [philosophy.md](../shared/philosophy.md). Key tenets here: *simplicity is the ultimate sophistication*, *say no to 1,000 things*, *challenge every assumption*, *unsaved ideation is waste*.
+See [philosophy.md](../shared/philosophy.md). Key tenets here: *simplicity is the ultimate sophistication*, *say no to 1,000 things*, *challenge every assumption*, *unsaved ideation is waste*, *prefer stable CLI contracts over ad-hoc file writes when both are possible*.
 
 ## Path Conventions
 
@@ -48,7 +48,7 @@ Create a task for each and complete in order:
 2. **Scope decomposition check** — if the request describes multiple independent subsystems, stop and help the user split into multiple Ideas before proceeding.
 3. **Phase 1 — Understand & Expand** (divergent).
 4. **Phase 2 — Evaluate & Converge**.
-5. **Phase 3 — Crystallize** as a SpecScore Idea artifact.
+5. **Phase 3 — Crystallize** as a SpecScore Idea artifact. Prefer the `specscore new idea` CLI scaffold over a direct file write when the CLI is available (see Phase 3 below).
 6. **Lint** the artifact: `specscore lint spec/ideas/<slug>.md`.
 7. **Inline self-review** — placeholders, contradictions, ambiguity, scope.
 8. **User review** — ask the user to review and approve the Recommended Direction.
@@ -98,6 +98,60 @@ After the user reacts to Phase 1, shift to convergent mode. Cadence becomes **si
 **Be honest, not supportive.** If a direction is weak, say so with specificity and kindness.
 
 ## Phase 3 — Crystallize as a SpecScore Idea
+
+**Prefer the CLI when available.** `specscore new idea <slug>` produces a lint-clean skeleton by construction and updates `spec/ideas/README.md` for you. Subsequent edits must preserve that lint-clean state.
+
+### Step 3a — Detect the CLI
+
+Probe once with Bash:
+
+```bash
+command -v specscore >/dev/null 2>&1 && specscore --version
+```
+
+If the probe succeeds, take the **CLI path**. Otherwise, take the **fallback path**.
+
+### Step 3b (CLI path) — Scaffold, then fill
+
+1. Invoke `specscore new idea <slug>` with every field you already have. Only these flags exist — do not invent others:
+
+   - `--title`
+   - `--owner`
+   - `--hmw` (Problem Statement)
+   - `--context`
+   - `--recommended-direction`
+   - `--mvp`
+   - `--not-doing` (repeatable; format `<thing> — <reason>`)
+   - `--force` (only if overwriting an existing draft at the same slug)
+   - `--project` (only if cwd isn't inside the target repo)
+
+   Example:
+
+   ```bash
+   specscore new idea my-slug \
+     --title "My Idea" \
+     --owner "alex" \
+     --hmw "How might we …?" \
+     --context "Triggered by …" \
+     --recommended-direction "We should …" \
+     --mvp "A two-week spike that …" \
+     --not-doing "Multi-tenant auth — out of scope for MVP" \
+     --not-doing "iOS client — web-first"
+   ```
+
+   The command writes `spec/ideas/<slug>.md`, runs lint-fix, and exits non-zero if the result isn't lint-clean.
+
+2. **Fill remaining sections with `Edit`.** Sections with no matching flag — `Alternatives Considered`, `Key Assumptions to Validate` (the Must/Should/Might table), `SpecScore Integration`, `Open Questions` — land in the file as HTML-comment prompts. Replace each prompt with real content via `Edit`. Sections you *did* pass via flags are already filled.
+
+### Step 3c (fallback path) — Direct write
+
+If the CLI is not on PATH, write the file directly using the schema below. The content must be identical to what the CLI would produce.
+
+### Step 3d — Lint
+
+In both paths, after the artifact is complete, run `specscore lint spec/ideas/<slug>.md`. The CLI scaffold is lint-clean on generation; your subsequent `Edit`s must not break that.
+
+### Schema (authoritative — used by both paths)
 
 Write to `spec/ideas/<slug>.md` using **exactly this schema**:
 
@@ -224,3 +278,4 @@ Direct, thoughtful, slightly provocative. A sharp thinking partner, not a facili
 - [specscore-lint-rules.md](../shared/specscore-lint-rules.md) — lint contract this skill assumes.
 - [synchestra-events.md](../shared/synchestra-events.md) — event payloads emitted by this skill.
 - [question-cadence.md](../shared/question-cadence.md) — when to batch vs single-question.
+- `specscore new idea <slug>` — CLI scaffolder used in Phase 3 (see `internal/cli/new.go` in the specscore repo for the authoritative flag list).
