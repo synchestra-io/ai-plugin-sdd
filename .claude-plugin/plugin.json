@@ -1,12 +1,12 @@
 {
-  "name": "spec-driven-development",
-  "description": "AI skills for efficient spec-driven development: specify, plan, build, verify, review, ship.",
+  "name": "spec-studio",
+  "description": "Spec Studio — AI skills for spec-driven development: specify, plan, build, verify, review, ship.",
   "version": "0.0.1",
   "author": {
     "name": "Alexander Trakhimenok"
   },
-  "homepage": "https://github.com/synchestra-io/ai-plugin-sdd",
-  "repository": "https://github.com/synchestra-io/ai-plugin-sdd",
+  "homepage": "https://github.com/synchestra-io/spec-studio",
+  "repository": "https://github.com/synchestra-io/spec-studio",
   "license": "MIT",
   "commands": "./.claude/commands"
 }
