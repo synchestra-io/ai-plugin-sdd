@@ -205,7 +205,7 @@ Phase 3: Crystallize (unique to SpecScore)
 ├── Map to existing SpecScore features if applicable
 ├── Identify which SpecScore specs this idea would need
 ├── Flag dependencies on other ideas or in-flight work
-└── Output: docs/ideas/[name].md — ready to promote to spec
+└── Output: spec/ideas/[name].md — ready to promote to spec
 ```
 
 **Idea document format:**
@@ -301,7 +301,7 @@ ci-cd-and-automation                                      ◄── verification
    - `references/` directory with quality checklists (adapted, not copied)
    - `agents/` directory with review personas that reference SpecScore specs
    - Anti-rationalization patterns embedded in our skill documentation
-   - `docs/ideas/` directory (already created) with our unified ideation format
+   - `spec/ideas/` directory (already created) with our unified ideation format
 3. **SpecScore remains the source of truth** — specs, validation, and traceability are ours; skills from either ecosystem feed into and consume SpecScore artifacts
 
 ---
@@ -310,7 +310,7 @@ ci-cd-and-automation                                      ◄── verification
 
 | Priority | Action | Rationale |
 |---|---|---|
-| P0 | Create `docs/ideas/` directory with ideation template | Gives pre-spec ideas a home (this document is the first) |
+| P0 | Create `spec/ideas/` directory with ideation template | Gives pre-spec ideas a home (this document is the first) |
 | P1 | Design unified ideation skill merging brainstorming + idea-refine | Our unique melt; neither competitor offers this |
 | P1 | Add `references/` directory with security, performance, accessibility checklists | Low effort, high value; can later inform lint rules |
 | P2 | Add `agents/` directory with SpecScore-aware review personas | Review quality improvement |
