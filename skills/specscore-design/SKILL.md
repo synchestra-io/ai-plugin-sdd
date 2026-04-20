@@ -11,7 +11,7 @@ description: |
 aliases: [design]
 ---
 
-# spec-studio:design
+# Design
 
 Turn approved intent into a lintable, testable SpecScore Feature.
 

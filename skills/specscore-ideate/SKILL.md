@@ -10,7 +10,7 @@ description: |
 aliases: [ideate]
 ---
 
-# spec-studio:ideate
+# Ideate
 
 Turn raw ideas into sharp, SpecScore-compatible Idea artifacts through structured divergent and convergent thinking.
 
