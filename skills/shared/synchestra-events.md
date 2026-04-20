@@ -2,7 +2,7 @@
 
 **Status:** Contract
 
-Events are how SDD skills hand work off to Synchestra and vice-versa. Both `specscore:ideate` and `specscore:design` emit events after successful artifact writes. Synchestra can also trigger skills in response to events.
+Events are how SDD skills hand work off to Synchestra and vice-versa. Both `spec-studio:ideate` and `spec-studio:design` emit events after successful artifact writes. Synchestra can also trigger skills in response to events.
 
 ## Event Envelope (common fields)
 
@@ -14,7 +14,7 @@ version: 1
 timestamp: <ISO-8601>
 actor:
   kind: skill | user | synchestra | external
-  id: <e.g., "skill:specscore:ideate", "user:<username>", "agent:<agent-id>">
+  id: <e.g., "skill:spec-studio:ideate", "user:<username>", "agent:<agent-id>">
 artifact:
   type: idea | feature | plan
   id: <stable SpecScore ID>
@@ -30,7 +30,7 @@ payload:
 - **Hook:** Skills invoke `synchestra emit <event.yaml>` (CLI) when available; fall back to direct file append otherwise.
 - **Idempotency:** Each event includes a `uuid` (assigned by emitter). Synchestra dedupes by uuid.
 
-## Events Emitted by `specscore:ideate`
+## Events Emitted by `spec-studio:ideate`
 
 ### `idea.drafted`
 Fired after the Idea artifact is first written and passes lint.
@@ -52,9 +52,9 @@ payload:
   recommended_direction_summary: <first paragraph>
 ```
 
-**Consumer:** Synchestra may react by scheduling `specscore:design` (after user confirmation) or by notifying watchers.
+**Consumer:** Synchestra may react by scheduling `spec-studio:design` (after user confirmation) or by notifying watchers.
 
-## Events Emitted by `specscore:design`
+## Events Emitted by `spec-studio:design`
 
 ### `feature.designed`
 Fired after the Feature artifact is written, lint-clean, and the reviewer subagent returns `Approved`.
@@ -107,8 +107,8 @@ payload:
 
 | Event | Emitter | Trigger |
 |---|---|---|
-| `idea.drafted` | `specscore:ideate` | First lint-clean write |
-| `idea.approved` | `specscore:ideate` | User approves Recommended Direction |
+| `idea.drafted` | `spec-studio:ideate` | First lint-clean write |
+| `idea.approved` | `spec-studio:ideate` | User approves Recommended Direction |
 | `idea.specified` | synchestra | Feature(s) created from an approved Idea |
-| `feature.designed` | `specscore:design` | Reviewer-approved, lint-clean Feature write |
-| `feature.approved` | `specscore:design` | User approves the written Feature |
+| `feature.designed` | `spec-studio:design` | Reviewer-approved, lint-clean Feature write |
+| `feature.approved` | `spec-studio:design` | User approves the written Feature |

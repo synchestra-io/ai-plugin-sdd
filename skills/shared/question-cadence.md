@@ -1,7 +1,7 @@
 # Question Cadence Guide
 
 **Status:** Shared convention
-**Applies to:** `specscore:ideate`, `specscore:design`
+**Applies to:** `spec-studio:ideate`, `spec-studio:design`
 
 Upstream `idea-refine` and `brainstorming` disagree on question cadence. `idea-refine` will batch 3–5 sharpening questions; `brainstorming` hard-enforces one-at-a-time. SpecScore skills **choose cadence by phase**, not by skill.
 
@@ -15,13 +15,13 @@ Upstream `idea-refine` and `brainstorming` disagree on question cadence. `idea-r
 
 | Phase | Cadence | Why |
 |---|---|---|
-| `specscore:ideate` Phase 1 — Understand & Expand | **Batch 3–5** | User arrived with an idea; asking "who, success, constraints, prior art, why now" in parallel is efficient and doesn't create branching paths. |
-| `specscore:ideate` Phase 2 — Evaluate & Converge | **Single** | The user's reaction to a stress-test shapes the next stress-test. Sequential. |
-| `specscore:ideate` Phase 3 — Crystallize | **None** | Skill authors the artifact; user reviews at the end. |
-| `specscore:design` — Scope check | **Single** | The decompose/proceed answer gates everything downstream. |
-| `specscore:design` — Clarifying | **Single, multiple-choice preferred** | Requirements detail branches fast; one at a time keeps the tree clean. |
-| `specscore:design` — Approach proposal | **Triplet presented together, single choice returned** | User picks one of 2–3 approaches; not a question — a decision. |
-| `specscore:design` — Section review | **Single per section** | Approve each design section (architecture, data flow, etc.) before the next. |
+| `spec-studio:ideate` Phase 1 — Understand & Expand | **Batch 3–5** | User arrived with an idea; asking "who, success, constraints, prior art, why now" in parallel is efficient and doesn't create branching paths. |
+| `spec-studio:ideate` Phase 2 — Evaluate & Converge | **Single** | The user's reaction to a stress-test shapes the next stress-test. Sequential. |
+| `spec-studio:ideate` Phase 3 — Crystallize | **None** | Skill authors the artifact; user reviews at the end. |
+| `spec-studio:design` — Scope check | **Single** | The decompose/proceed answer gates everything downstream. |
+| `spec-studio:design` — Clarifying | **Single, multiple-choice preferred** | Requirements detail branches fast; one at a time keeps the tree clean. |
+| `spec-studio:design` — Approach proposal | **Triplet presented together, single choice returned** | User picks one of 2–3 approaches; not a question — a decision. |
+| `spec-studio:design` — Section review | **Single per section** | Approve each design section (architecture, data flow, etc.) before the next. |
 
 ## Formatting
 

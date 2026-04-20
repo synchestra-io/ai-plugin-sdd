@@ -1,5 +1,5 @@
 ---
-name: specscore:design
+name: design
 description: |
   Turns an approved SpecScore Idea (or a clear buildable intent) into a
   SpecScore Feature with requirements and Given/When/Then acceptance
@@ -11,7 +11,7 @@ description: |
 aliases: [design]
 ---
 
-# specscore:design
+# spec-studio:design
 
 Turn approved intent into a lintable, testable SpecScore Feature.
 
@@ -25,13 +25,13 @@ Do NOT invoke `writing-plans`, `frontend-design`, `mcp-builder`, or ANY implemen
   4. The spec-document reviewer subagent returned `Approved`.
   5. The user has explicitly approved the written Feature.
 
-This applies to **every** Feature, regardless of perceived simplicity. The only skill invoked after `specscore:design` is `writing-plans`.
+This applies to **every** Feature, regardless of perceived simplicity. The only skill invoked after `spec-studio:design` is `writing-plans`.
 </HARD-GATE>
 
 ## When to Use
 
 - A SpecScore Idea is `Approved` and ready to become a Feature.
-- User has a clear, high-conviction buildable intent (may skip `specscore:ideate`).
+- User has a clear, high-conviction buildable intent (may skip `spec-studio:ideate`).
 - Behavior of an existing Feature needs to change — **revise in place** (see [path-conventions.md](../shared/path-conventions.md)).
 
 ## Anti-Pattern: "This Is Too Simple To Need A Design"
@@ -40,7 +40,7 @@ Every Feature goes through this. A toggle, a one-line config, a single utility �
 
 ## Pre-Flight
 
-1. **Inputs check.** If triggered from an approved Idea, load it and list the Idea's assumptions that this Feature must validate. If no Idea exists, ask: "Is this ready to design, or should we ideate first?" — don't force `specscore:ideate` on high-conviction users.
+1. **Inputs check.** If triggered from an approved Idea, load it and list the Idea's assumptions that this Feature must validate. If no Idea exists, ask: "Is this ready to design, or should we ideate first?" — don't force `spec-studio:ideate` on high-conviction users.
 2. **Scope decomposition.** If the intent spans multiple independent subsystems, stop and help the user decompose into multiple Features before continuing.
 3. **Revision vs new.** If a Feature with this slug already exists, decide: revise in place (default) or create a successor with `supersedes:` (only when scope change invalidates existing ACs). See [path-conventions.md](../shared/path-conventions.md).
 
@@ -52,7 +52,7 @@ Create a task for each and complete in order:
 2. **Scope decomposition check.**
 3. **Offer visual companion** (if visual questions are ahead) — own message, no other content. See [visual-companion.md](references/visual-companion.md) (still TBD — see [the analysis doc §11.1](../../spec/ideas/ideate-vs-brainstorming-skills-analysis.md)).
 4. **Ask clarifying questions** — one at a time, multiple-choice preferred. See [question-cadence.md](../shared/question-cadence.md).
-5. **Propose 2–3 approaches** with trade-offs; lead with your recommendation. Use `specscore:ideate` lenses (inversion, constraint removal, simplification) where useful.
+5. **Propose 2–3 approaches** with trade-offs; lead with your recommendation. Use `spec-studio:ideate` lenses (inversion, constraint removal, simplification) where useful.
 6. **Present design sections** one at a time, get approval after each.
 7. **Author the Feature artifact** — `README.md` + `requirements/*.md`.
 8. **Rehearse stub decision** — per-AC heuristic. See [rehearse-heuristic.md](../shared/rehearse-heuristic.md).

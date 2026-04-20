@@ -25,6 +25,5 @@
     "claude-code-skill",
     "engineering",
     "development"
-  ],
-  "commands": "./.claude/commands"
+  ]
 }

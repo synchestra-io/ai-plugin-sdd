@@ -1,9 +1,9 @@
 # Rehearse Test-Stub Heuristic
 
 **Status:** Draft (v0.1) — refine with real Feature examples
-**Used by:** `specscore:design` (checklist step: Rehearse stub generation)
+**Used by:** `spec-studio:design` (checklist step: Rehearse stub generation)
 
-Rehearse test-stub generation is **optional**. `specscore:design` decides whether to scaffold stubs based on this heuristic. The user can always override.
+Rehearse test-stub generation is **optional**. `spec-studio:design` decides whether to scaffold stubs based on this heuristic. The user can always override.
 
 ## The Decision
 

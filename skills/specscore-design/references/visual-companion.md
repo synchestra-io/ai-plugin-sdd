@@ -4,7 +4,7 @@
 
 ## Current Recommendation (interim)
 
-Until the visual-companion strategy is decided, `specscore:design` prefers lightweight in-artifact visuals:
+Until the visual-companion strategy is decided, `spec-studio:design` prefers lightweight in-artifact visuals:
 
 - **Mermaid** diagrams embedded in `spec/features/<slug>/README.md` (rendered natively by most IDEs and GitHub).
 - **ASCII art** for simple flows.

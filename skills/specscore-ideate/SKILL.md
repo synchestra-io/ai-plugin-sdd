@@ -1,5 +1,5 @@
 ---
-name: specscore:ideate
+name: ideate
 description: |
   Refines raw ideas into SpecScore Idea artifacts through structured
   divergent and convergent thinking. Produces a lintable pre-spec
@@ -10,14 +10,14 @@ description: |
 aliases: [ideate]
 ---
 
-# specscore:ideate
+# spec-studio:ideate
 
 Turn raw ideas into sharp, SpecScore-compatible Idea artifacts through structured divergent and convergent thinking.
 
 ## Hard Gate
 
 <HARD-GATE>
-Do NOT invoke `specscore:design`, `writing-plans`, or any implementation skill until:
+Do NOT invoke `spec-studio:design`, `writing-plans`, or any implementation skill until:
   1. An Idea artifact has been written to `spec/ideas/<slug>.md`.
   2. `specscore lint spec/ideas/<slug>.md` passes.
   3. The user has explicitly approved the Recommended Direction.
@@ -30,7 +30,7 @@ Ideas that can't be lint-clean aren't ready to be designed.
 - Raw, vague, or unvalidated concept.
 - User unsure whether an idea is worth building.
 - Multiple possible directions with no clear winner.
-- **Skip** when: the user already has an approved Idea or a clear, high-conviction feature to design — go straight to `specscore:design`.
+- **Skip** when: the user already has an approved Idea or a clear, high-conviction feature to design — go straight to `spec-studio:design`.
 
 ## Philosophy
 
@@ -234,7 +234,7 @@ On approval:
 
 **Out of scope for this skill.** Synchestra handles promotion:
 
-1. When `specscore:design` (or the user) creates a Feature with `source_idea: <idea-id>` in its front-matter, Synchestra detects the link.
+1. When `spec-studio:design` (or the user) creates a Feature with `source_idea: <idea-id>` in its front-matter, Synchestra detects the link.
 2. Synchestra transitions the Idea `status: Approved → Specified`.
 3. Synchestra auto-populates the Idea's `promotes_to` with the list of Feature IDs.
 4. Synchestra emits `idea.specified`.
@@ -262,7 +262,7 @@ On approval:
 - Empty "Not Doing" list
 - Writing to `docs/ideas/` instead of `spec/ideas/`
 - Manually editing `promotes_to`
-- Jumping to `specscore:design` before user approval
+- Jumping to `spec-studio:design` before user approval
 
 ## Tone
 
