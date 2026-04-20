@@ -50,7 +50,7 @@ Create a task for each and complete in order:
 
 1. **Explore project context** — existing Features, recent commits, related specs.
 2. **Scope decomposition check.**
-3. **Offer visual companion** (if visual questions are ahead) — own message, no other content. See [visual-companion.md](references/visual-companion.md) (still TBD — see [the analysis doc §11.1](../../docs/ideas/ideate-vs-brainstorming-skills-analysis.md)).
+3. **Offer visual companion** (if visual questions are ahead) — own message, no other content. See [visual-companion.md](references/visual-companion.md) (still TBD — see [the analysis doc §11.1](../../spec/ideas/ideate-vs-brainstorming-skills-analysis.md)).
 4. **Ask clarifying questions** — one at a time, multiple-choice preferred. See [question-cadence.md](../shared/question-cadence.md).
 5. **Propose 2–3 approaches** with trade-offs; lead with your recommendation. Use `specscore:ideate` lenses (inversion, constraint removal, simplification) where useful.
 6. **Present design sections** one at a time, get approval after each.
@@ -182,7 +182,7 @@ Invoke `writing-plans`. Do **not** invoke any other skill. `writing-plans` is th
 
 ## Visual Companion (Optional)
 
-**Status:** decision pending — see `docs/ideas/ideate-vs-brainstorming-skills-analysis.md` §11.1.
+**Status:** decision pending — see `spec/ideas/ideate-vs-brainstorming-skills-analysis.md` §11.1.
 
 Until the visual-companion strategy is decided, prefer these lightweight visual aids in text:
 

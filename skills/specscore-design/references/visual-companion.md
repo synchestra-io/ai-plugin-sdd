@@ -1,6 +1,6 @@
 # Visual Companion — Decision Pending
 
-**Status:** OPEN — see `docs/ideas/ideate-vs-brainstorming-skills-analysis.md` §11.1.
+**Status:** OPEN — see `spec/ideas/ideate-vs-brainstorming-skills-analysis.md` §11.1.
 
 ## Current Recommendation (interim)
 
@@ -24,4 +24,4 @@ A browser-based companion is substantially more complex than a markdown-only app
 
 ## Open Sub-Questions
 
-See `docs/ideas/ideate-vs-brainstorming-skills-analysis.md` §11.1 for the full list.
+See `spec/ideas/ideate-vs-brainstorming-skills-analysis.md` §11.1 for the full list.
