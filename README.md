@@ -3,7 +3,7 @@
 **Spec Studio — spec-driven development, by Synchestra.**
 
 About
-AI skills & Web UI for efficient spec-driven development: specify, plan, build, verify, review, ship.
+AI skills & Web UI for efficient spec-driven development: specify, plan, build, verify, recap, review, ship.
 
 ## Naming
 
