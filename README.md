@@ -6,13 +6,13 @@ AI skills and Web UI for efficient spec-driven development — the full lifecycl
 
 ## Why a studio
 
-A studio is where a composition is made before it's performed. Spec Studio is where you compose — an ideation and authoring environment for the spec itself, not yet the code. The spec is the score; Synchestra performs it.
+A studio is a workspace where something gets made end-to-end. Spec Studio is the cockpit for working on one project — from raw idea through shipped code, feature by feature — and for keeping the spec and the code honest with each other as both evolve.
 
-That's the shape of the ecosystem:
+Alongside it:
 
-- **Compose** in Spec Studio — refine ideas, design features, write acceptance criteria.
-- **Score** with [SpecScore](https://specscore.org/) — the open protocol every artifact conforms to.
-- **Perform** with [Synchestra](https://synchestra.io/) — the engine that dispatches work against the score.
+- [**SpecScore**](https://specscore.org/) — the open protocol every spec artifact conforms to.
+- [**Synchestra**](https://synchestra.io/) — the engine that runs dispatched work. Headless; you never really "use" it directly.
+- [**Synchestra Hub**](https://hub.synchestra.io/) — the portfolio view. When you want to step back from this project and see all your projects and runners, that's Hub.
 
 ## What's in the box
 
@@ -43,7 +43,7 @@ See [`skills/shared/philosophy.md`](./skills/shared/philosophy.md) for the full 
 |---|---|---|
 | [SpecScore](https://specscore.org/) | The protocol: feature/requirement/AC format, lint, LSP | Open source |
 | [Synchestra](https://synchestra.io/) | The engine: CLI, daemon, runners | Open source |
-| **Spec Studio** | The SDD workflow — AI skills in your IDE today, web authoring UI on the way | **Open source** |
+| **Spec Studio** | Work on one project end-to-end, including spec↔code coherence — AI skills in your IDE today, web authoring UI on the way | **Open source** |
 | [Synchestra Hub](https://hub.synchestra.io/) | Portfolio + runtime UI for remote execution | Hosted |
 
 Spec Studio works standalone with Claude Code. Paired with Synchestra Hub, the same skills can dispatch long-running or sandboxed work to remote runners without leaving your editor.
