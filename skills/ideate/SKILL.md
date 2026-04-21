@@ -5,7 +5,7 @@ description: |
   divergent and convergent thinking. Produces a lintable pre-spec
   one-pager at spec/ideas/<slug>.md that can be promoted to one or
   more SpecScore Features. Use when the user has a vague concept and
-  isn't ready for design yet.
+  isn't ready to specify yet.
   Trigger: "ideate", "/ideate", "refine this idea", "stress-test this".
 aliases: [ideate]
 ---
@@ -17,12 +17,12 @@ Turn raw ideas into sharp, SpecScore-compatible Idea artifacts through structure
 ## Hard Gate
 
 <HARD-GATE>
-Do NOT invoke `spec-studio:design`, `writing-plans`, or any implementation skill until:
+Do NOT invoke `spec-studio:specify`, `writing-plans`, or any implementation skill until:
   1. An Idea artifact has been written to `spec/ideas/<slug>.md`.
   2. `specscore lint spec/ideas/<slug>.md` passes.
   3. The user has explicitly approved the Recommended Direction.
 
-Ideas that can't be lint-clean aren't ready to be designed.
+Ideas that can't be lint-clean aren't ready to be specified.
 </HARD-GATE>
 
 ## When to Use
@@ -30,7 +30,7 @@ Ideas that can't be lint-clean aren't ready to be designed.
 - Raw, vague, or unvalidated concept.
 - User unsure whether an idea is worth building.
 - Multiple possible directions with no clear winner.
-- **Skip** when: the user already has an approved Idea or a clear, high-conviction feature to design — go straight to `spec-studio:design`.
+- **Skip** when: the user already has an approved Idea or a clear, high-conviction feature to specify — go straight to `spec-studio:specify`.
 
 ## Philosophy
 
@@ -196,7 +196,7 @@ supersedes: []
 | Might-be-true | … | … |
 
 ## SpecScore Integration
-- **New Features this would create:** <list or "TBD at design time">
+- **New Features this would create:** <list or "TBD at spec time">
 - **Existing Features affected:** <list or "none">
 - **Dependencies:** <other Ideas or in-flight work>
 
@@ -221,7 +221,7 @@ Fix inline. Don't re-review; move on.
 
 After lint + self-review pass:
 
-> "Idea drafted and lint-clean at `spec/ideas/<slug>.md`. Please review the Recommended Direction and MVP Scope. Approve to move to design, or request changes."
+> "Idea drafted and lint-clean at `spec/ideas/<slug>.md`. Please review the Recommended Direction and MVP Scope. Approve to move to specify, or request changes."
 
 Wait. If the user requests changes, make them and re-lint. Only proceed once the user approves.
 
@@ -234,7 +234,7 @@ On approval:
 
 **Out of scope for this skill.** Synchestra handles promotion:
 
-1. When `spec-studio:design` (or the user) creates a Feature with `source_idea: <idea-id>` in its front-matter, Synchestra detects the link.
+1. When `spec-studio:specify` (or the user) creates a Feature with `source_idea: <idea-id>` in its front-matter, Synchestra detects the link.
 2. Synchestra transitions the Idea `status: Approved → Specified`.
 3. Synchestra auto-populates the Idea's `promotes_to` with the list of Feature IDs.
 4. Synchestra emits `idea.specified`.
@@ -262,7 +262,7 @@ On approval:
 - Empty "Not Doing" list
 - Writing to `docs/ideas/` instead of `spec/ideas/`
 - Manually editing `promotes_to`
-- Jumping to `spec-studio:design` before user approval
+- Jumping to `spec-studio:specify` before user approval
 
 ## Tone
 

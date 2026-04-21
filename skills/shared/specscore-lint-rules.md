@@ -2,7 +2,7 @@
 
 **Status:** Contract (skills depend on these; changes require a coordinated update)
 
-Both `spec-studio:ideate` and `spec-studio:design` assume `specscore lint` enforces the rules below. Skills invoke lint as a verification step — if any rule here changes, the corresponding skill checklist step may need to update.
+Both `spec-studio:ideate` and `spec-studio:specify` assume `specscore lint` enforces the rules below. Skills invoke lint as a verification step — if any rule here changes, the corresponding skill checklist step may need to update.
 
 ## Lint CLI Contract
 

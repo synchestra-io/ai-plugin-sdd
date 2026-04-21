@@ -1,7 +1,7 @@
 # SDD Skill Philosophy
 
 **Status:** Shared principles
-**Applies to:** `spec-studio:ideate`, `spec-studio:design`, and future SDD skills
+**Applies to:** `spec-studio:ideate`, `spec-studio:specify`, and future SDD skills
 
 These principles are inherited from both upstream skills (Jobs/Ive simplicity ethos from `idea-refine`; YAGNI/isolation discipline from `brainstorming`) and shaped to fit SpecScore's typed-artifact stance.
 

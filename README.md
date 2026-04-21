@@ -34,7 +34,7 @@ Spec Studio ships as a set of Claude Code skills that sit on top of the `specsco
 | Skill | Purpose |
 |---|---|
 | `spec-studio:ideate` | Refine raw ideas into SpecScore Idea artifacts through structured divergent/convergent thinking. Gates on a lint-clean `spec/ideas/<slug>.md` that the user has approved. |
-| `spec-studio:design` | Turn an approved Idea into a SpecScore Feature with requirements and `Given / When / Then` acceptance criteria at `spec/features/<slug>/`. Gates implementation until the Feature is lint-clean and approved. |
+| `spec-studio:specify` | Turn an approved Idea into a SpecScore Feature with requirements and `Given / When / Then` acceptance criteria at `spec/features/<slug>/`. Gates implementation until the Feature is lint-clean and approved. |
 
 More skills covering the rest of the lifecycle (plan, build, verify, recap, review, ship) are on the roadmap, alongside a web authoring UI that will grow inside [Synchestra Hub](https://hub.synchestra.io/).
 
@@ -43,7 +43,7 @@ More skills covering the rest of the lifecycle (plan, build, verify, recap, revi
 Spec Studio's skills share a common philosophy:
 
 - **Types beat vibes.** If `specscore lint` passes, you can build on it. If it doesn't, you can't.
-- **Gates are non-negotiable.** No amount of perceived simplicity bypasses a hard gate. Ideate before design, design before plan, plan before code.
+- **Gates are non-negotiable.** No amount of perceived simplicity bypasses a hard gate. Ideate before specify, specify before plan, plan before code.
 - **Unsaved ideation is waste.** If it's worth thinking about, it's worth a lint-clean artifact in `spec/`.
 - **Say no to 1,000 things.** The "Not Doing" list is the most valuable part of any artifact.
 - **Be honest, not supportive.** Skills push back on weak ideas with specificity and kindness. No yes-machines.
@@ -63,7 +63,7 @@ Spec Studio works standalone with Claude Code. Paired with Synchestra Hub, the s
 
 ## Status
 
-**Version 0.0.1 — early.** The `ideate` and `design` skills are stable enough to use on real work; the rest of the lifecycle is in progress. Expect sharp edges, breaking changes, and active iteration.
+**Version 0.0.1 — early.** The `ideate` and `specify` skills are stable enough to use on real work; the rest of the lifecycle is in progress. Expect sharp edges, breaking changes, and active iteration.
 
 ## License
 

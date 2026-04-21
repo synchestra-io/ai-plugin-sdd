@@ -2,7 +2,7 @@
 
 **Status:** Contract
 
-Events are how SDD skills hand work off to Synchestra and vice-versa. Both `spec-studio:ideate` and `spec-studio:design` emit events after successful artifact writes. Synchestra can also trigger skills in response to events.
+Events are how SDD skills hand work off to Synchestra and vice-versa. Both `spec-studio:ideate` and `spec-studio:specify` emit events after successful artifact writes. Synchestra can also trigger skills in response to events.
 
 ## Event Envelope (common fields)
 
@@ -52,9 +52,9 @@ payload:
   recommended_direction_summary: <first paragraph>
 ```
 
-**Consumer:** Synchestra may react by scheduling `spec-studio:design` (after user confirmation) or by notifying watchers.
+**Consumer:** Synchestra may react by scheduling `spec-studio:specify` (after user confirmation) or by notifying watchers.
 
-## Events Emitted by `spec-studio:design`
+## Events Emitted by `spec-studio:specify`
 
 ### `feature.designed`
 Fired after the Feature artifact is written, lint-clean, and the reviewer subagent returns `Approved`.
@@ -110,5 +110,5 @@ payload:
 | `idea.drafted` | `spec-studio:ideate` | First lint-clean write |
 | `idea.approved` | `spec-studio:ideate` | User approves Recommended Direction |
 | `idea.specified` | synchestra | Feature(s) created from an approved Idea |
-| `feature.designed` | `spec-studio:design` | Reviewer-approved, lint-clean Feature write |
-| `feature.approved` | `spec-studio:design` | User approves the written Feature |
+| `feature.designed` | `spec-studio:specify` | Reviewer-approved, lint-clean Feature write |
+| `feature.approved` | `spec-studio:specify` | User approves the written Feature |

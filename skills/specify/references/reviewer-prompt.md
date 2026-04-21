@@ -2,7 +2,7 @@
 
 **Status:** Adapted from `obra/superpowers/skills/brainstorming/spec-document-reviewer-prompt.md` for SpecScore Feature artifacts.
 
-Use this template when dispatching a spec document reviewer subagent from `spec-studio:design`. Purpose: verify the Feature is complete, consistent, and ready for `writing-plans`.
+Use this template when dispatching a spec document reviewer subagent from `spec-studio:specify`. Purpose: verify the Feature is complete, consistent, and ready for `writing-plans`.
 
 **Dispatch after:** Feature artifact is written, lint passes, and inline self-review is done.
 

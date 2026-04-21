@@ -1,10 +1,10 @@
 # Visual Companion — Decision Pending
 
-**Status:** OPEN — see `spec/ideas/ideate-vs-brainstorming-skills-analysis.md` §11.1.
+**Status:** OPEN — see `spec/research/ideate-vs-brainstorming-skills-analysis.md` §11.1.
 
 ## Current Recommendation (interim)
 
-Until the visual-companion strategy is decided, `spec-studio:design` prefers lightweight in-artifact visuals:
+Until the visual-companion strategy is decided, `spec-studio:specify` prefers lightweight in-artifact visuals:
 
 - **Mermaid** diagrams embedded in `spec/features/<slug>/README.md` (rendered natively by most IDEs and GitHub).
 - **ASCII art** for simple flows.
@@ -24,4 +24,4 @@ A browser-based companion is substantially more complex than a markdown-only app
 
 ## Open Sub-Questions
 
-See `spec/ideas/ideate-vs-brainstorming-skills-analysis.md` §11.1 for the full list.
+See `spec/research/ideate-vs-brainstorming-skills-analysis.md` §11.1 for the full list.
