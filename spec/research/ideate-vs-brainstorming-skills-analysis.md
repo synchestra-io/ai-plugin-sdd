@@ -434,7 +434,7 @@ cost the most. Design can be short; it cannot be skipped.
 8. Run lint + inline self-review
 9. Dispatch spec-document-reviewer subagent
 10. User reviews the written Feature — wait for approval
-11. Emit `feature.designed` event for Synchestra
+11. Emit `feature.specified` event for Synchestra
 12. Transition to writing-plans
 
 ## Design Sections (scale to complexity)
@@ -543,7 +543,7 @@ skills/
 
 3. **Lint granularity — RESOLVED.** `specscore lint` supports **single-file linting** (e.g., `specscore lint spec/ideas/<slug>.md`) in addition to whole-tree. The skills invoke single-file lint on the artifact they just wrote. No separate Idea-only lint subset is needed — the lint rule engine dispatches by artifact `type:` in the front-matter.
 
-4. **Event schema — RESOLVED.** Central file: `shared/synchestra-events.md`. Emitted by the skills: `idea.drafted`, `idea.approved`, `idea.specified`, `feature.designed`, `feature.approved`. Payload shapes defined in that file.
+4. **Event schema — RESOLVED.** Central file: `shared/synchestra-events.md`. Emitted by the skills: `idea.drafted`, `idea.approved`, `idea.specified`, `feature.specified`, `feature.approved`. Payload shapes defined in that file.
 
 5. **Parallel / competing Ideas — OUT OF SCOPE.** For now, users manage competing-hypothesis scenarios manually (archive the loser, keep the winner). Revisit if/when it becomes a pattern.
 

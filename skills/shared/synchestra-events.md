@@ -56,7 +56,7 @@ payload:
 
 ## Events Emitted by `spec-studio:specify`
 
-### `feature.designed`
+### `feature.specified`
 Fired after the Feature artifact is written, lint-clean, and the reviewer subagent returns `Approved`.
 
 ```yaml
@@ -110,5 +110,5 @@ payload:
 | `idea.drafted` | `spec-studio:ideate` | First lint-clean write |
 | `idea.approved` | `spec-studio:ideate` | User approves Recommended Direction |
 | `idea.specified` | synchestra | Feature(s) created from an approved Idea |
-| `feature.designed` | `spec-studio:specify` | Reviewer-approved, lint-clean Feature write |
+| `feature.specified` | `spec-studio:specify` | Reviewer-approved, lint-clean Feature write |
 | `feature.approved` | `spec-studio:specify` | User approves the written Feature |

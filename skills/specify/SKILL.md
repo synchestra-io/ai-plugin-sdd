@@ -60,7 +60,7 @@ Create a task for each and complete in order:
 10. **Inline self-review** — placeholders, consistency, scope, ambiguity.
 11. **Dispatch spec-document-reviewer subagent** — see [reviewer-prompt.md](references/reviewer-prompt.md). Must return `Approved` before user review.
 12. **User review gate** — user reviews the written Feature; wait for approval.
-13. **Emit events** — `feature.designed` on reviewer approval; `feature.approved` on user approval. See [synchestra-events.md](../shared/synchestra-events.md).
+13. **Emit events** — `feature.specified` on reviewer approval; `feature.approved` on user approval. See [synchestra-events.md](../shared/synchestra-events.md).
 14. **Transition to `writing-plans`.**
 
 ## Spec Sections (scale to complexity)
@@ -204,7 +204,7 @@ If the user has `obra/superpowers` installed, we may reuse its browser-based vis
 - [ ] `status: Approved` in front-matter
 - [ ] Rehearse decision recorded (stubs scaffolded OR skip-reason noted)
 - [ ] Source Idea (if any) linked via `source_idea:` — Synchestra handles the reverse link
-- [ ] `feature.designed` + `feature.approved` events emitted
+- [ ] `feature.specified` + `feature.approved` events emitted
 
 ## Red Flags
 

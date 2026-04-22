@@ -1,7 +1,7 @@
 ---
 type: idea
 id: idea-spec-studio-plan-skill
-status: Draft
+status: Approved
 date: 2026-04-20
 owner: alexander.trakhimenok
 promotes_to: []
