@@ -54,6 +54,10 @@ The skill MUST write Idea artifacts to `spec/ideas/<slug>.md` relative to the pr
 
 The skill MUST NOT write Idea artifacts to `docs/ideas/`, `notes/`, or any path other than `spec/ideas/`. `docs/` is reserved for prose documentation; SpecScore artifacts live under `spec/`.
 
+#### REQ: auto-create-ideas-dir
+
+When invoked in a project that does not yet have a `spec/ideas/` directory, the skill MUST create the directory and an empty `spec/ideas/README.md` index file before writing the first artifact. The auto-created index MUST be lint-clean (`type: index` schema, empty Contents table, "None at this time." Outstanding Questions). Auto-creation MUST NOT happen silently — the skill MUST tell the user it is bootstrapping the directory.
+
 ### Three-phase dialogue
 
 The skill runs a fixed three-phase structure: divergent exploration, convergent evaluation, and crystallization into the artifact.
@@ -84,7 +88,11 @@ The skill MUST NOT invent CLI flags. If a needed input has no flag, the skill MU
 
 #### REQ: fallback-direct-write
 
-When the `specscore` CLI is NOT on PATH, the skill MUST fall back to a direct file write using the same authoritative schema. The fallback artifact MUST be byte-equivalent (modulo whitespace) to what the CLI would have produced.
+When the `specscore` CLI is NOT on PATH, the skill MUST fall back to a direct file write using the same authoritative schema documented in the skill manifest.
+
+#### REQ: schema-equivalence-cli-fallback
+
+CLI and fallback paths MUST produce **schema-equivalent** artifacts: identical front-matter fields, identical section headings, identical required content. They MAY differ in cosmetic ways (whitespace, blank-line counts, comment style, default ordering of optional fields). The contract is that downstream consumers (`specscore lint`, `spec-studio:specify`, human readers) cannot tell which path produced the artifact based on its functional content.
 
 ### Required artifact content
 
@@ -106,6 +114,17 @@ Every artifact passes through both machine validation and a deliberate human-sty
 
 After writing or editing the artifact, the skill MUST run `specscore lint spec/ideas/<slug>.md` and confirm a zero exit code before proceeding to user review.
 
+#### REQ: lint-failure-recovery
+
+On `specscore lint` failure after a write or edit, the skill MUST:
+
+1. Run `specscore lint --fix spec/ideas/<slug>.md` once to attempt automated repair.
+2. Re-run `specscore lint spec/ideas/<slug>.md` to verify the result.
+3. If lint now passes, continue and tell the user what was auto-fixed.
+4. If lint still fails, surface the remaining violations to the user with rule IDs and affected sections.
+
+The skill MUST NOT loop `--fix` more than once. The skill MUST NOT auto-fix violations of `I-002` (Not Doing required) or `I-003` (Must-be-true assumption required), even if a future `--fix` would attempt them — these always require human input.
+
 #### REQ: inline-self-review
 
 Before requesting user review, the skill MUST scan the artifact for: (a) unresolved placeholders (`TBD`, `TODO`, `???`, `FIXME`), (b) internal contradictions (Recommended Direction vs. MVP Scope, assumptions vs. Not-Doing), (c) hidden multi-Idea scope, and (d) requirements interpretable two ways. Findings MUST be fixed inline.
@@ -118,21 +137,33 @@ The user — not the skill — owns the approval decision.
 
 The skill MUST present the lint-clean artifact to the user with an explicit request to approve the Recommended Direction. The skill MUST NOT proceed to status transition or event emission without that approval.
 
+#### REQ: approval-explicit-phrase
+
+The skill MUST recognize the explicit approval phrases `approve` and `approved` (case-insensitive, optional surrounding punctuation) as unambiguous approval. On detection of either phrase as a standalone user response (or as the dominant content of a short response), the skill MUST proceed directly to the status transition without asking for confirmation.
+
+#### REQ: approval-vague-confirmation
+
+When the user's response signals positive sentiment but does not contain a recognized explicit approval phrase (e.g., "looks good", "yeah", "nice", "ship it", "lgtm"), the skill MUST treat this as a soft signal and ask one explicit confirmation question (e.g., "Treat that as approval?") before proceeding. The skill MUST NOT silently transition status on a vague signal.
+
 #### REQ: status-transition-on-approval
 
-On user approval, the skill MUST update the artifact's front-matter `status` from `Draft` to `Approved` and re-run lint to confirm the transition is still valid.
+On confirmed user approval (per `approval-explicit-phrase` or `approval-vague-confirmation`), the skill MUST update the artifact's front-matter `status` from `Draft` to `Approved` and re-run lint to confirm the transition is still valid.
 
 ### Event emission
 
-The skill participates in the Synchestra event vocabulary.
+The skill participates in the Synchestra event vocabulary defined in [`shared/synchestra-events.md`](../../../../skills/shared/synchestra-events.md).
 
 #### REQ: event-drafted
 
-The skill MUST emit `idea.drafted` on first successful write of the artifact (after lint passes for the first time).
+While the artifact's front-matter `status` is `Draft`, the skill MUST emit `idea.drafted` after every successful `specscore lint` pass that follows a write or edit. The first emission carries the same event name as subsequent ones — Synchestra dedupes by event uuid.
 
 #### REQ: event-approved
 
-The skill MUST emit `idea.approved` after the user approves the Recommended Direction and the status transition completes.
+The skill MUST emit `idea.approved` exactly once, after the user approves the Recommended Direction and the status transition Draft → Approved completes successfully.
+
+#### REQ: event-updated
+
+After `idea.approved` has fired, the artifact's `status` is `Approved`. While in that state, the skill MUST emit `idea.updated` after every successful `specscore lint` pass that follows a subsequent write or edit. The skill MUST NOT emit `idea.drafted` for an Approved artifact, and MUST NOT re-emit `idea.approved` for further iteration.
 
 ### Promotion boundary
 
@@ -171,9 +202,9 @@ The skill cannot invoke `specify`, `writing-plans`, or any implementation skill 
 
 ### AC: artifact-conformance
 
-**Requirements:** ideate#req:artifact-path, ideate#req:no-docs-path, ideate#req:phase-3-crystallize, ideate#req:not-doing-required, ideate#req:assumption-tiers
+**Requirements:** ideate#req:artifact-path, ideate#req:no-docs-path, ideate#req:auto-create-ideas-dir, ideate#req:phase-3-crystallize, ideate#req:not-doing-required, ideate#req:assumption-tiers
 
-Every produced artifact lives at the canonical path `spec/ideas/<slug>.md`, conforms to the Idea schema, has a non-empty `Not Doing (and Why)` section, and lists at least one Must-be-true assumption. Artifacts written elsewhere or missing required sections are rejected by `specscore lint`.
+Every produced artifact lives at the canonical path `spec/ideas/<slug>.md`, conforms to the Idea schema, has a non-empty `Not Doing (and Why)` section, and lists at least one Must-be-true assumption. When `spec/ideas/` does not exist, the skill bootstraps it (with a lint-clean index README) and tells the user. Artifacts written elsewhere or missing required sections are rejected by `specscore lint`.
 
 ### AC: phase-discipline
 
@@ -183,15 +214,27 @@ The skill executes the three-phase dialogue in order. Phase 1 produces a HMW res
 
 ### AC: cli-vs-fallback
 
-**Requirements:** ideate#req:cli-preferred, ideate#req:cli-flag-discipline, ideate#req:fallback-direct-write
+**Requirements:** ideate#req:cli-preferred, ideate#req:cli-flag-discipline, ideate#req:fallback-direct-write, ideate#req:schema-equivalence-cli-fallback
 
-The skill probes for the `specscore` CLI once per invocation. When present, scaffolding goes through `specscore new idea <slug>` with only documented flags. When absent, the skill writes the artifact directly using the authoritative schema, producing byte-equivalent output (modulo whitespace).
+The skill probes for the `specscore` CLI once per invocation. When present, scaffolding goes through `specscore new idea <slug>` with only documented flags. When absent, the skill writes the artifact directly using the authoritative schema. Both paths produce schema-equivalent artifacts — identical front-matter, identical sections, identical required content — though they MAY differ in cosmetic ways (whitespace, blank lines, comment style).
 
 ### AC: lifecycle-events
 
-**Requirements:** ideate#req:event-drafted, ideate#req:event-approved, ideate#req:status-transition-on-approval
+**Requirements:** ideate#req:event-drafted, ideate#req:event-approved, ideate#req:event-updated, ideate#req:status-transition-on-approval
 
-`idea.drafted` is emitted on first lint-clean write. On user approval, the front-matter `status` transitions Draft → Approved, lint is re-run, and `idea.approved` is emitted. Skipping or reordering these steps is a contract violation.
+While `status: Draft`, every successful lint pass after a write/edit emits `idea.drafted`. On confirmed user approval, the front-matter transitions Draft → Approved, lint is re-run, and `idea.approved` is emitted exactly once. While `status: Approved`, every successful lint pass after a subsequent write/edit emits `idea.updated` (never `idea.drafted` and never a second `idea.approved`). Skipping, reordering, or misclassifying these emissions is a contract violation.
+
+### AC: approval-detection
+
+**Requirements:** ideate#req:approval-explicit-phrase, ideate#req:approval-vague-confirmation, ideate#req:user-approval-required
+
+The skill detects approval in two tiers: explicit phrases (`approve`, `approved`) trigger immediate transition without further confirmation; vague positive signals trigger a single explicit confirmation prompt. Silent transition on vague signals is a contract violation.
+
+### AC: lint-failure-recovery
+
+**Requirements:** ideate#req:lint-pass, ideate#req:lint-failure-recovery
+
+On lint failure after a write/edit, the skill runs `specscore lint --fix` exactly once, re-runs lint, and either continues (logging what was fixed) or surfaces the remaining violations to the user. The skill never loops `--fix`, and never auto-fixes `I-002` or `I-003` violations.
 
 ### AC: skip-condition-respected
 
@@ -207,12 +250,11 @@ The skill never edits `promotes_to`, never scaffolds a Feature, and never modifi
 
 ## Outstanding Questions
 
-- Should "explicit user approval" require a specific phrase (e.g., "approve") for unambiguous detection, or is any positive signal sufficient?
-- When the user requests changes after lint has already passed, should the skill keep the same `idea.drafted` event or emit a new one?
-- How should the skill handle a project with no `spec/ideas/` directory yet — auto-create, or refuse and require explicit project initialization?
-- What is the precise contract for "byte-equivalent (modulo whitespace)" between CLI and fallback paths — should this be enforced by a comparison test, or is it a design intent?
-- Should `idea.drafted` be emitted on every lint-clean re-write during iteration, or only on the first one?
-- Does the skill need a recovery mode when `specscore lint` fails after an `Edit` — auto-fix-and-retry, or always surface to user?
+- Should the recognized explicit-approval phrase set be extended beyond `approve` / `approved`, or stay tight? (Extending risks ambiguity; staying tight risks user friction in casual sessions.)
+- Should `approval-explicit-phrase` be locale-aware (e.g., recognize `aprobar` / `承認`) or English-only? Defer until non-English usage is observed.
+- Does `idea.updated` carry a structured diff payload, or only the slug + revision (already in the envelope)? Current spec assumes the envelope is sufficient.
+- Should `auto-create-ideas-dir` also auto-stage the new directory in git, or leave staging to the user? Current spec assumes leave-to-user.
+- Should `schema-equivalence-cli-fallback` be enforced by a CI comparison test (when both the CLI and a hand-authored fallback example exist), or remain a design contract enforced by code review only?
 
 ---
 *This document follows the https://specscore.md/feature-specification*

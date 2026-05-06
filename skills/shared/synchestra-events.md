@@ -33,7 +33,7 @@ payload:
 ## Events Emitted by `spec-studio:ideate`
 
 ### `idea.drafted`
-Fired after the Idea artifact is first written and passes lint.
+Fired after every successful `specscore lint` pass following a write or edit, while the Idea's front-matter `status` is `Draft`. The first emission carries the same event name as subsequent ones — Synchestra dedupes by event uuid.
 
 ```yaml
 payload:
@@ -44,7 +44,7 @@ payload:
 ```
 
 ### `idea.approved`
-Fired after the user explicitly approves the Recommended Direction and the Idea's `status` transitions to `Approved`.
+Fired exactly once, after the user explicitly approves the Recommended Direction and the Idea's `status` transitions to `Approved`.
 
 ```yaml
 payload:
@@ -53,6 +53,16 @@ payload:
 ```
 
 **Consumer:** Synchestra may react by scheduling `spec-studio:specify` (after user confirmation) or by notifying watchers.
+
+### `idea.updated`
+Fired after every successful `specscore lint` pass following a write or edit, while the Idea's front-matter `status` is `Approved`. Distinguishes post-approval iteration from pre-approval drafting; consumers that watch only for material changes to approved Ideas subscribe here rather than to `idea.drafted`.
+
+```yaml
+payload:
+  slug: <slug>
+```
+
+**Consumer:** Synchestra may notify Features that declare this Idea as a `Source Ideas` entry, so downstream specs can be re-reconciled.
 
 ## Events Emitted by `spec-studio:specify`
 
@@ -107,8 +117,9 @@ payload:
 
 | Event | Emitter | Trigger |
 |---|---|---|
-| `idea.drafted` | `spec-studio:ideate` | First lint-clean write |
-| `idea.approved` | `spec-studio:ideate` | User approves Recommended Direction |
+| `idea.drafted` | `spec-studio:ideate` | Every successful lint pass while `status: Draft` |
+| `idea.approved` | `spec-studio:ideate` | User approves Recommended Direction (exactly once) |
+| `idea.updated` | `spec-studio:ideate` | Every successful lint pass while `status: Approved` |
 | `idea.specified` | synchestra | Feature(s) created from an approved Idea |
 | `feature.specified` | `spec-studio:specify` | Reviewer-approved, lint-clean Feature write |
 | `feature.approved` | `spec-studio:specify` | User approves the written Feature |
