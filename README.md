@@ -61,6 +61,12 @@ See [`skills/shared/philosophy.md`](./skills/shared/philosophy.md) for the full 
 
 Spec Studio works standalone with Claude Code. Paired with Synchestra Hub, the same skills can dispatch long-running or sandboxed work to remote runners without leaving your editor.
 
+## Repository family
+
+Spec Studio is a product surface, not a CLI wrapper, so this repo takes the brand name directly (`spec-studio`) — not the `ai-plugin-*` prefix used by sibling plugins like [`ai-plugin-synchestra`](https://github.com/synchestra-io/ai-plugin-synchestra) and [`ai-plugin-specscore`](https://github.com/synchestra-io/ai-plugin-specscore), which wrap separate CLIs. The plugin *is* the product here, following the GitHub Spec Kit precedent (`github/spec-kit`).
+
+Future repos in this family share the `spec-studio-*` stem (e.g., `spec-studio-web`, `spec-studio-api`). The plugin anchors the family.
+
 ## Status
 
 **Version 0.0.1 — early.** The `ideate` and `specify` skills are stable enough to use on real work; the rest of the lifecycle is in progress. Expect sharp edges, breaking changes, and active iteration.
