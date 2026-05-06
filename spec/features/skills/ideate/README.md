@@ -1,6 +1,6 @@
 # Feature: Ideate Skill
 
-> [View in Synchestra Hub](https://hub.synchestra.io/project/features?id=spec-studio@synchestra-io@github.com&path=spec%2Ffeatures%2Fskills%2Fideate) — graph, discussions, approvals
+> [View in Spec Studio](https://specstudio.synchestra.io/project/features?id=spec-studio@synchestra-io@github.com&path=spec%2Ffeatures%2Fskills%2Fideate) — graph, discussions, approvals
 
 **Status:** In Progress
 
@@ -57,6 +57,10 @@ The skill MUST NOT write Idea artifacts to `docs/ideas/`, `notes/`, or any path 
 #### REQ: auto-create-ideas-dir
 
 When invoked in a project that does not yet have a `spec/ideas/` directory, the skill MUST create the directory and an empty `spec/ideas/README.md` index file before writing the first artifact. The auto-created index MUST be lint-clean (`type: index` schema, empty Contents table, "None at this time." Outstanding Questions). Auto-creation MUST NOT happen silently — the skill MUST tell the user it is bootstrapping the directory.
+
+#### REQ: auto-stage-on-create
+
+When the skill creates files (the bootstrapped `spec/ideas/`, `spec/ideas/README.md`, or any new `spec/ideas/<slug>.md`), it MUST `git add` those paths to the index and MUST report the staged paths to the user in the same response that confirms the write. The skill MUST NOT commit on the user's behalf — staging only. If staging fails (no git repository, detached worktree, lock contention), the skill MUST surface the failure to the user and continue without aborting the artifact write.
 
 ### Three-phase dialogue
 
@@ -139,11 +143,15 @@ The skill MUST present the lint-clean artifact to the user with an explicit requ
 
 #### REQ: approval-explicit-phrase
 
-The skill MUST recognize the explicit approval phrases `approve` and `approved` (case-insensitive, optional surrounding punctuation) as unambiguous approval. On detection of either phrase as a standalone user response (or as the dominant content of a short response), the skill MUST proceed directly to the status transition without asking for confirmation.
+The skill MUST recognize the following English phrases (case-insensitive, optional surrounding punctuation) as unambiguous approval: `approve`, `approved`, `accept`, `accepted`, `lgtm`. The skill MUST also recognize their **direct semantic equivalents in any language the user is communicating in** — for example, `aprobar` / `aprobado` (Spanish), `approuver` / `approuvé` (French), `承認` / `承認する` (Japanese), `одобрить` / `одобрено` (Russian), `批准` / `同意` (Chinese), `genehmigen` / `genehmigt` (German). The criterion is semantic, not lexical: the phrase MUST mean "I give explicit approval" as a verb form in the source language, not a generic affirmative.
+
+On detection of any qualifying phrase as a standalone user response (or as the dominant content of a short response), the skill MUST proceed directly to the status transition without asking for confirmation.
+
+The boundary is intentionally tight in every language — generic affirmatives like English `yes` / `ok`, Spanish `sí`, French `oui`, Russian `да`, Japanese `はい`, Chinese `好`, as well as ambiguous tokens like `+1`, `ship it`, `🚀`, `confirm` are NOT in the explicit set. They fall into the vague-signal tier per `approval-vague-confirmation`. When in doubt, the skill MUST treat the signal as vague.
 
 #### REQ: approval-vague-confirmation
 
-When the user's response signals positive sentiment but does not contain a recognized explicit approval phrase (e.g., "looks good", "yeah", "nice", "ship it", "lgtm"), the skill MUST treat this as a soft signal and ask one explicit confirmation question (e.g., "Treat that as approval?") before proceeding. The skill MUST NOT silently transition status on a vague signal.
+When the user's response signals positive sentiment but does not contain a recognized explicit approval phrase (e.g., "looks good", "yeah", "nice", "ship it", "+1", `🚀`), the skill MUST treat this as a soft signal and ask one explicit confirmation question (e.g., "Treat that as approval?") before proceeding. The skill MUST NOT silently transition status on a vague signal.
 
 #### REQ: status-transition-on-approval
 
@@ -202,9 +210,9 @@ The skill cannot invoke `specify`, `writing-plans`, or any implementation skill 
 
 ### AC: artifact-conformance
 
-**Requirements:** ideate#req:artifact-path, ideate#req:no-docs-path, ideate#req:auto-create-ideas-dir, ideate#req:phase-3-crystallize, ideate#req:not-doing-required, ideate#req:assumption-tiers
+**Requirements:** ideate#req:artifact-path, ideate#req:no-docs-path, ideate#req:auto-create-ideas-dir, ideate#req:auto-stage-on-create, ideate#req:phase-3-crystallize, ideate#req:not-doing-required, ideate#req:assumption-tiers
 
-Every produced artifact lives at the canonical path `spec/ideas/<slug>.md`, conforms to the Idea schema, has a non-empty `Not Doing (and Why)` section, and lists at least one Must-be-true assumption. When `spec/ideas/` does not exist, the skill bootstraps it (with a lint-clean index README) and tells the user. Artifacts written elsewhere or missing required sections are rejected by `specscore lint`.
+Every produced artifact lives at the canonical path `spec/ideas/<slug>.md`, conforms to the Idea schema, has a non-empty `Not Doing (and Why)` section, and lists at least one Must-be-true assumption. When `spec/ideas/` does not exist, the skill bootstraps it (with a lint-clean index README) and tells the user. All files the skill creates are staged in git and the staged paths are reported to the user; the skill never commits on the user's behalf. Artifacts written elsewhere or missing required sections are rejected by `specscore lint`.
 
 ### AC: phase-discipline
 
@@ -250,11 +258,7 @@ The skill never edits `promotes_to`, never scaffolds a Feature, and never modifi
 
 ## Outstanding Questions
 
-- Should the recognized explicit-approval phrase set be extended beyond `approve` / `approved`, or stay tight? (Extending risks ambiguity; staying tight risks user friction in casual sessions.)
-- Should `approval-explicit-phrase` be locale-aware (e.g., recognize `aprobar` / `承認`) or English-only? Defer until non-English usage is observed.
-- Does `idea.updated` carry a structured diff payload, or only the slug + revision (already in the envelope)? Current spec assumes the envelope is sufficient.
-- Should `auto-create-ideas-dir` also auto-stage the new directory in git, or leave staging to the user? Current spec assumes leave-to-user.
-- Should `schema-equivalence-cli-fallback` be enforced by a CI comparison test (when both the CLI and a hand-authored fallback example exist), or remain a design contract enforced by code review only?
+- Should `auto-stage-on-create` be opt-out via a project-level setting for teams that disallow tools touching the git index? Current spec is "always stage with explicit notification" — revisit if a real team-policy conflict emerges.
 
 ---
 *This document follows the https://specscore.md/feature-specification*

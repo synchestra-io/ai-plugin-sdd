@@ -36,7 +36,7 @@ Spec Studio ships as a set of Claude Code skills that sit on top of the `specsco
 | `spec-studio:ideate` | Refine raw ideas into SpecScore Idea artifacts through structured divergent/convergent thinking. Gates on a lint-clean `spec/ideas/<slug>.md` that the user has approved. |
 | `spec-studio:specify` | Turn an approved Idea into a SpecScore Feature with requirements and `Given / When / Then` acceptance criteria at `spec/features/<slug>/`. Gates implementation until the Feature is lint-clean and approved. |
 
-More skills covering the rest of the lifecycle (plan, build, verify, recap, review, ship) are on the roadmap, alongside a web authoring UI that will grow inside [Synchestra Hub](https://hub.synchestra.io/).
+More skills covering the rest of the lifecycle (plan, build, verify, recap, review, ship) are on the roadmap, alongside a web authoring UI at [`specstudio.synchestra.io`](https://specstudio.synchestra.io/).
 
 ## Principles
 

@@ -1,6 +1,6 @@
 # Feature: Ship Skill
 
-> [View in Synchestra Hub](https://hub.synchestra.io/project/features?id=spec-studio@synchestra-io@github.com&path=spec%2Ffeatures%2Fskills%2Fship) — graph, discussions, approvals
+> [View in Spec Studio](https://specstudio.synchestra.io/project/features?id=spec-studio@synchestra-io@github.com&path=spec%2Ffeatures%2Fskills%2Fship) — graph, discussions, approvals
 
 **Status:** Draft
 
