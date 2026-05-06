@@ -8,14 +8,17 @@ For the product overview and install instructions, see the [repo README](../READ
 
 ```mermaid
 flowchart LR
+    intent([clear intent]):::input
+    intent --> specify
     ideate([ideate]):::shipped --> specify([specify]):::shipped --> plan([plan]):::defined --> build([build]):::roadmap --> verify([verify]):::roadmap --> recap([recap]):::roadmap --> review([review]):::roadmap --> ship([ship]):::roadmap
 
     classDef shipped fill:#d4f4dd,stroke:#2d7a3e,color:#1a3d1f
     classDef defined fill:#fff4cc,stroke:#a07a00,color:#3d3000
     classDef roadmap fill:#e8e8e8,stroke:#888,color:#444
+    classDef input fill:none,stroke:#888,stroke-dasharray:4 3,color:#555
 ```
 
-Each phase consumes the previous phase's lint-clean artifact and gates the next. Green = Shipped, yellow = Defined, gray = Roadmap.
+Each phase consumes the previous phase's lint-clean artifact and gates the next. Green = Shipped, yellow = Defined, gray = Roadmap. `specify` also accepts a clear buildable intent directly — `ideate` is skippable when the problem and scope are already obvious.
 
 ## Status
 
