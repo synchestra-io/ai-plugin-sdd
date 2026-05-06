@@ -75,7 +75,21 @@ The status column in this Feature's Contents table (and on each sub-feature) ref
 
 ### Lifecycle ordering
 
-Sub-features are listed in lifecycle order (`ideate` → `specify` → `plan` → `build` → `verify` → `recap` → `review` → `ship`), matching the diagram in [`skills/README.md`](../../../skills/README.md).
+Sub-features are listed in lifecycle order (`ideate` → `specify` → `plan` → `build` → `verify` → `recap` → `review` → `ship`):
+
+```mermaid
+flowchart LR
+    intent([clear intent]):::input
+    intent --> specify
+    ideate([ideate]):::shipped --> specify([specify]):::shipped --> plan([plan]):::defined --> build([build]):::roadmap --> verify([verify]):::roadmap --> recap([recap]):::roadmap --> review([review]):::roadmap --> ship([ship]):::roadmap
+
+    classDef shipped fill:#d4f4dd,stroke:#2d7a3e,color:#1a3d1f
+    classDef defined fill:#fff4cc,stroke:#a07a00,color:#3d3000
+    classDef roadmap fill:#e8e8e8,stroke:#888,color:#444
+    classDef input fill:none,stroke:#888,stroke-dasharray:4 3,color:#555
+```
+
+This diagram is duplicated from [`skills/README.md`](../../../skills/README.md) so the lifecycle is visible from either entry point. **Color encodes implementation status, not spec status** — green = Shipped, yellow = Defined, gray = Roadmap. Each sub-feature's own `**Status:**` field (Draft / In Progress / Stable / Deprecated) reflects its specification maturity. `specify` accepts a clear buildable intent directly; `ideate` is skippable when the problem and scope are already obvious.
 
 ## Acceptance Criteria
 
