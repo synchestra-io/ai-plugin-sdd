@@ -24,10 +24,27 @@ Published on the [Synchestra AI Marketplace](https://github.com/synchestra-io/ai
 
 ```
 /plugin marketplace add synchestra-io/ai-marketplace
-/plugin install specstudio-skills@synchestra-io
+/plugin install specstudio@synchestra-io
 ```
 
-The first command registers the marketplace once; the second installs (and later updates) the plugin. Run `/plugin uninstall specstudio-skills` to remove it.
+The first command registers the marketplace once; the second installs (and later updates) the plugin. Run `/plugin uninstall specstudio` to remove it.
+
+### Dependencies
+
+The `specstudio` plugin declares two dependencies on sibling plugins in the same marketplace:
+
+- **`specscore@synchestra-io`** — wraps the `specscore` CLI as agent skills for SpecScore lint, navigation, and lifecycle operations. Repo: [`ai-plugin-specscore`](https://github.com/synchestra-io/ai-plugin-specscore).
+- **`synchestra@synchestra-io`** — wraps the `synchestra` CLI as agent skills for task and session orchestration. Repo: [`ai-plugin-synchestra`](https://github.com/synchestra-io/ai-plugin-synchestra).
+
+Both are **installed automatically** when you install `specstudio` — Claude Code resolves the dependency graph and reports each transitive install at the end of the install output. Uninstalling `specstudio` does not remove them; run `claude plugin prune` (or `claude plugin uninstall specstudio --prune`) to clean them up if you don't want them around.
+
+Once installed, the three plugins coexist as independent slash-command namespaces:
+
+| Plugin | Slash namespace | Role |
+|---|---|---|
+| `specstudio` | `specstudio:*` | High-level SDD methodology skills (this plugin) |
+| `specscore` | `specscore:*` | SpecScore CLI wrapper |
+| `synchestra` | `synchestra:*` | Synchestra CLI wrapper |
 
 ## What's in the box
 
