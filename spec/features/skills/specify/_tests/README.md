@@ -20,5 +20,9 @@ Scenarios validating the [Specify Skill feature](../README.md). Each scenario re
 | [transition-only-to-writing-plans.md](transition-only-to-writing-plans.md) | `specify#ac:promotion-boundary-held` |
 | [revise-in-place-vs-supersede.md](revise-in-place-vs-supersede.md) | `specify#req:revise-vs-supersede` |
 
+## Outstanding Questions
+
+None at this time.
+
 ---
 *This document follows the https://specscore.md/scenarios-index-specification*

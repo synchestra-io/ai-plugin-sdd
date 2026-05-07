@@ -92,6 +92,22 @@ The wrapper-prefix `ai-plugin-*` (used by [`ai-plugin-synchestra`](https://githu
 
 Brand spelling: `SpecStudio` in copy, `specstudio` in identifiers (no hyphen, no space). See [the canonical spelling rule](https://github.com/synchestra-io/synchestra-marketing/blob/main/branding/canonical-spelling.md). The brand consolidation that retired the legacy hyphenated form is documented in [`2026-05-07-specstudio-brand-consolidation.md`](https://github.com/synchestra-io/synchestra-marketing/blob/main/decisions/2026-05-07-specstudio-brand-consolidation.md).
 
+## Dogfooding
+
+`specstudio-skills` specifies and develops itself with its own tools.
+
+**Specified in SpecScore.** Every feature, idea, and acceptance criterion in this repo lives under [`spec/`](./spec/README.md) as a SpecScore artifact:
+
+- [`spec/features/`](./spec/features/README.md) — Feature specs for each skill (`ideate`, `specify`, planned `plan`/`build`/etc.) with `Given / When / Then` acceptance criteria and Rehearse test stubs.
+- [`spec/ideas/`](./spec/ideas/README.md) — Pre-spec one-pagers for skills that haven't been promoted to Features yet.
+- [`spec/research/`](./spec/research/README.md) — Long-form analyses that informed key design decisions (e.g., the comparison between SpecStudio's `ideate`/`specify` and `obra/superpowers`'s `brainstorming`).
+
+The whole tree lints clean against `specscore spec lint`.
+
+**Developed with SpecStudio.** Every skill in this repo was authored using its own siblings: `specstudio:ideate` produced the Ideas, `specstudio:specify` promoted them into Features, and the same `specstudio:*` workflow gates implementation on lint-clean specs and explicit user approval. When a skill needs a new behavior, the loop is: ideate → specify → review → implement → land — same loop SpecStudio asks of its users.
+
+If you want to see the methodology applied at scale, this repo is the reference. If something in the spec tree is sloppy, that's also visible — and that's the point.
+
 ## Status
 
 **Version 0.0.3 — early.** The `ideate` and `specify` skills are stable enough to use on real work; the rest of the lifecycle is in progress. Expect sharp edges, breaking changes, and active iteration.
