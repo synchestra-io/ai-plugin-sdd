@@ -10,6 +10,7 @@ Scenarios validating the [Specify Skill feature](../README.md). Each scenario re
 | [auto-create-spec-features-dir.md](auto-create-spec-features-dir.md) | `specify#req:auto-create-features-dir` |
 | [auto-stage-feature-files-in-git.md](auto-stage-feature-files-in-git.md) | `specify#req:auto-stage-on-create` |
 | [source-ideas-references-must-resolve.md](source-ideas-references-must-resolve.md) | `specify#ac:source-idea-linkage` |
+| [related-idea-surfaced-on-clear-intent.md](related-idea-surfaced-on-clear-intent.md) | `specify#req:related-idea-surfacing` |
 | [requirements-need-given-when-then-acs.md](requirements-need-given-when-then-acs.md) | `specify#req:ac-format` |
 | [reviewer-subagent-must-approve-before-user.md](reviewer-subagent-must-approve-before-user.md) | `specify#ac:reviewer-then-user` |
 | [baseline-reviewer-enforces-default-blockers.md](baseline-reviewer-enforces-default-blockers.md) | `specify#req:reviewer-baseline-blockers` |

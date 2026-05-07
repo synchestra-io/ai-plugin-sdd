@@ -100,6 +100,10 @@ When the Feature originates from one or more approved Ideas, the Feature `README
 
 The skill MUST NOT manually edit any referenced Idea's `promotes_to` or `Status` field. Synchestra reconciles those in response to the Feature declaring its `Source Ideas`. The Feature is the only authoritative input; the Idea side is managed.
 
+#### REQ: related-idea-surfacing
+
+When the user invokes `specify` on the **clear-intent path** (no Idea explicitly named), the skill MUST scan `spec/ideas/` for Approved Ideas semantically related to the user's intent and surface any candidates to the user with their slugs and HMWs before writing the Feature. The user MAY (a) link any subset via `**Source Ideas:**`, (b) waive — proceed without linking — or (c) revise the intent. The skill MUST acknowledge the user's choice in its response and proceed accordingly. Silent orphaning of related Approved Ideas is a contract violation; the user's waiver is not blocked but MUST be a conscious choice the skill explicitly acknowledged.
+
 ### CLI vs fallback path
 
 Crystallization prefers a stable CLI contract over ad-hoc file writes when one becomes available.
@@ -269,9 +273,9 @@ Every produced Feature lives under `spec/features/<slug>/` with the canonical mu
 
 ### AC: source-idea-linkage
 
-**Requirements:** specify#req:source-idea-field, specify#req:no-manual-promotes-to, specify#req:accepts-idea-or-intent
+**Requirements:** specify#req:source-idea-field, specify#req:no-manual-promotes-to, specify#req:accepts-idea-or-intent, specify#req:related-idea-surfacing
 
-When a Feature originates from one or more approved Ideas, the Feature declares them via `**Source Ideas:**`. Every referenced Idea exists with `Status ∈ {Approved, Specified}`; missing or wrong-status references are rejected by lint. The skill never edits the referenced Idea's `promotes_to` or `Status` directly — Synchestra reconciles those.
+When a Feature originates from one or more approved Ideas, the Feature declares them via `**Source Ideas:**`. Every referenced Idea exists with `Status ∈ {Approved, Specified}`; missing or wrong-status references are rejected by lint. The skill never edits the referenced Idea's `promotes_to` or `Status` directly — Synchestra reconciles those. On the clear-intent path, the skill scans for semantically related Approved Ideas and surfaces them to the user before writing; the user may link, waive, or revise, but waiving must be a conscious acknowledged choice.
 
 ### AC: cli-vs-fallback
 
@@ -317,7 +321,6 @@ The skill never transitions to any skill other than `writing-plans`. When the us
 
 ## Outstanding Questions
  Currently the spec lists three examples (missing Source Ideas, non-G/W/T ACs, empty Outstanding Questions); the canonical list should live in `shared/specscore-lint-rules.md` and be referenced.
-- When a user invokes `specify` with a clear intent that bypasses an existing Approved Idea, should the skill require the user to either link that Idea via `Source Ideas` or explicitly waive it? Currently silent.
 - Should the status transition on user approval be `Draft → In Progress` (current spec) or `Draft → Approved`? SpecScore's Feature spec uses `In Progress`; ideate uses `Approved`. The two skills currently disagree on terminology.
 - **Reviewer registration mechanism.** The skill supports additional reviewers per `reviewer-extension-hook`, but the registration mechanism is unspecified. Candidate mechanisms: (a) project setting in a config file (`.synchestra/config.yaml`), (b) plugin manifest entries, (c) convention-based discovery (e.g., scan `spec/reviewers/<name>/`), (d) explicit invocation flag. Defer the choice until at least one real second reviewer ships and the consumer's needs are concrete.
 - **When does the reviewer concept earn its own Feature?** The built-in reviewer is currently described in this Feature plus a prose prompt at `skills/specify/references/reviewer-prompt.md`. Once a second reviewer ships, or once the baseline blocker list grows past ~8 entries, promote the reviewer to its own SpecScore Feature at `spec/features/spec-document-reviewer/` (sibling, not sub-feature, since `plan` and `ship` may also load reviewers).
