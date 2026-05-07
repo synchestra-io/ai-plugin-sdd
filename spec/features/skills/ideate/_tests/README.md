@@ -15,6 +15,8 @@ Scenarios validating the [Ideate Skill feature](../README.md). Each scenario ref
 | [fallback-when-cli-missing.md](fallback-when-cli-missing.md) | `ideate#ac:cli-vs-fallback` |
 | [approval-emits-idea-approved-event.md](approval-emits-idea-approved-event.md) | `ideate#ac:lifecycle-events` |
 | [post-approval-edit-emits-idea-updated.md](post-approval-edit-emits-idea-updated.md) | `ideate#ac:lifecycle-events` |
+| [event-payload-carries-change-context.md](event-payload-carries-change-context.md) | `ideate#req:event-payload-change-context` |
+| [change-summary-stays-factual.md](change-summary-stays-factual.md) | `ideate#req:change-summary-discipline` |
 | [explicit-approve-phrase-transitions-without-confirmation.md](explicit-approve-phrase-transitions-without-confirmation.md) | `ideate#ac:approval-detection` |
 | [non-english-approval-recognized.md](non-english-approval-recognized.md) | `ideate#req:approval-explicit-phrase` |
 | [vague-positive-signal-requires-confirmation.md](vague-positive-signal-requires-confirmation.md) | `ideate#ac:approval-detection` |

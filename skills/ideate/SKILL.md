@@ -55,7 +55,7 @@ Create a task for each and complete in order:
 7. **Auto-stage** every file you created (`spec/ideas/<slug>.md`, plus the bootstrap files if any) with `git add`. Tell the user the staged paths. Never commit on the user's behalf.
 8. **Inline self-review** — placeholders, contradictions, ambiguity, scope.
 9. **User review** — ask the user to review and approve the Recommended Direction. Recognize explicit approval phrases (`approve`, `approved`, `accept`, `accepted`, `lgtm`, plus their semantic equivalents in the user's language); treat vague positive signals as soft and ask one explicit confirmation question.
-10. **Emit events** — `idea.drafted` on every successful lint pass while `status: Draft`; `idea.approved` exactly once on approval; `idea.updated` on every successful lint pass while `status: Approved`. See [synchestra-events.md](../shared/synchestra-events.md).
+10. **Emit events** — `idea.drafted` on every successful lint pass while `status: Draft`; `idea.approved` exactly once on approval; `idea.updated` on every successful lint pass while `status: Approved`. Both `drafted` and `updated` payloads carry `changed_sections`, `previous_revision`, and a factual `change_summary` (≤2 sentences). See [synchestra-events.md](../shared/synchestra-events.md).
 
 ## Phase 1 — Understand & Expand (Divergent)
 
@@ -295,6 +295,26 @@ Once `status: Approved`, the Idea is alive but not frozen. The user MAY edit it 
 
 `idea.updated` is the signal Synchestra uses to notify Features that declare this Idea as a `Source Ideas` entry, so downstream specs can reconcile.
 
+### Computing the change-context payload
+
+Both `idea.drafted` (re-emissions) and `idea.updated` events carry three change-context fields. Compute them before emission:
+
+- **`previous_revision`** — the git SHA at which the previous emission of the same event fired (for `idea.updated`, the SHA at which `idea.approved` last fired, or the previous `idea.updated`; for `idea.drafted` re-emissions, the SHA of the prior `idea.drafted`). On the very first `idea.drafted` for an Idea, this is `null`.
+- **`changed_sections`** — list of H2 section names whose content differs between `previous_revision` and the current revision. H3 changes within a section roll up to the parent H2. Computed by parsing both versions and comparing per-section. `null` on the first `idea.drafted`.
+- **`change_summary`** — a string of at most two sentences describing the change. **Factual only.** Describe what content was added, removed, or modified, in which section. Do NOT speculate about the user's intent or motivation. Do NOT editorialize about the quality or wisdom of the change. If the only change is whitespace or formatting, say so explicitly. `null` on the first `idea.drafted`.
+
+**Examples of disciplined `change_summary`:**
+
+- ✅ "Replaced two paragraphs in Recommended Direction; the proposed approach now uses event sourcing instead of CRUD."
+- ✅ "Added one entry to Not Doing; updated one assumption in the Should-be-true tier."
+- ✅ "Whitespace and trailing-newline cleanup; no semantic content changed."
+
+**Examples of forbidden `change_summary`:**
+
+- ❌ "User is rethinking the approach because of performance concerns." *(speculates about motivation)*
+- ❌ "This change makes the spec more aligned with industry best practices." *(editorializes)*
+- ❌ "Important changes to the recommended direction." *(vague; not factual)*
+
 ## Promotion to Feature(s)
 
 **Out of scope for this skill.** Synchestra handles promotion:
@@ -319,6 +339,7 @@ Once `status: Approved`, the Idea is alive but not frozen. The user MAY edit it 
 - [ ] User approved the Recommended Direction (explicit phrase OR vague-signal followed by explicit confirmation)
 - [ ] `status` is `Approved` (if approved) or `Draft` (if not yet)
 - [ ] Events emitted per state: `idea.drafted` while Draft; `idea.approved` once on transition; `idea.updated` while Approved
+- [ ] `idea.drafted` and `idea.updated` payloads include `changed_sections`, `previous_revision`, and a factual `change_summary` (all `null` on first `idea.drafted`, non-null thereafter)
 
 ## Red Flags
 
@@ -335,6 +356,9 @@ Once `status: Approved`, the Idea is alive but not frozen. The user MAY edit it 
 - Treating `yes` / `ok` / `sí` / `oui` / `+1` / `🚀` as explicit approval (silent status transition on vague signal)
 - Running `git commit` instead of `git add` (skill stages, never commits)
 - Emitting `idea.drafted` for an Approved artifact, or re-emitting `idea.approved`
+- Speculating about user intent or editorializing in `change_summary` ("User is rethinking…", "Important changes…", "More aligned with best practices…") instead of describing the observable change in factual terms
+- `change_summary` longer than two sentences
+- Including `changed_sections` line numbers (consumers compute lines from `git diff <previous_revision>..<revision>` — payload carries section names only)
 
 ## Tone
 

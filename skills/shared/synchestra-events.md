@@ -41,7 +41,14 @@ payload:
   hmw: <How Might We statement>
   target_user: <string>
   approved: false
+  changed_sections: [<H2 section name>, ...] | null   # null on first emission (no baseline)
+  previous_revision: <git SHA> | null                  # null on first emission
+  change_summary: <string ≤2 sentences> | null         # null on first emission
 ```
+
+**Change-context fields** (`changed_sections`, `previous_revision`, `change_summary`) carry the diff between this emission and the previous one. They are `null` on the first emission for an Idea (no prior revision to diff against). On every subsequent emission they are present and non-null.
+
+`changed_sections` lists the H2 section names whose content differs from `previous_revision`. `change_summary` is a ≤2-sentence **factual** description of the change (no speculation about the user's intent or motivation; no editorializing).
 
 ### `idea.approved`
 Fired exactly once, after the user explicitly approves the Recommended Direction and the Idea's `status` transitions to `Approved`.
@@ -60,9 +67,17 @@ Fired after every successful `specscore lint` pass following a write or edit, wh
 ```yaml
 payload:
   slug: <slug>
+  hmw: <How Might We statement>
+  target_user: <string>
+  approved: true
+  changed_sections: [<H2 section name>, ...]   # always non-null (an updated event by definition has a baseline)
+  previous_revision: <git SHA>                  # always non-null
+  change_summary: <string ≤2 sentences>         # always non-null; same discipline as idea.drafted
 ```
 
-**Consumer:** Synchestra may notify Features that declare this Idea as a `Source Ideas` entry, so downstream specs can be re-reconciled.
+The change-context fields follow the same semantics and discipline as on `idea.drafted` (see above), but are never `null` here — by definition, an `idea.updated` emission has a prior revision to diff against (the revision at which `idea.approved` last fired, or the previous `idea.updated`).
+
+**Consumer:** Synchestra may notify Features that declare this Idea as a `Source Ideas` entry, so downstream specs can be re-reconciled. Consumers can filter on `changed_sections` to react only when load-bearing sections (e.g., `Recommended Direction`) change.
 
 ## Events Emitted by `spec-studio:specify`
 

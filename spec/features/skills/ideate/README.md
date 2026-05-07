@@ -173,6 +173,20 @@ The skill MUST emit `idea.approved` exactly once, after the user approves the Re
 
 After `idea.approved` has fired, the artifact's `status` is `Approved`. While in that state, the skill MUST emit `idea.updated` after every successful `specscore lint` pass that follows a subsequent write or edit. The skill MUST NOT emit `idea.drafted` for an Approved artifact, and MUST NOT re-emit `idea.approved` for further iteration.
 
+#### REQ: event-payload-change-context
+
+Both `idea.drafted` and `idea.updated` event payloads MUST carry three change-context fields beyond the base payload (slug, hmw, target_user, approved):
+
+- `changed_sections`: a list of H2 section names whose content differs from `previous_revision`. H3 changes within a section roll up to that section.
+- `previous_revision`: the git SHA the diff is computed against.
+- `change_summary`: a string of at most two sentences summarizing the change (see `change-summary-discipline`).
+
+On the **first** `idea.drafted` emission for an Idea (initial write, no prior revision), all three fields MUST be `null`. On every subsequent emission of either event, all three MUST be present and non-null.
+
+#### REQ: change-summary-discipline
+
+The `change_summary` field MUST describe the change in **factual, observable terms** — what content was added, removed, or modified in which section. The summary MUST NOT speculate about the user's intent, motivation, or downstream implications, and MUST NOT editorialize about the quality or wisdom of the change. If the only change is whitespace or formatting, the summary MUST say so explicitly. Maximum length: two sentences.
+
 ### Promotion boundary
 
 Promotion to a Feature is the responsibility of `spec-studio:specify` and Synchestra tooling, not of `ideate`.
@@ -228,9 +242,9 @@ The skill probes for the `specscore` CLI once per invocation. When present, scaf
 
 ### AC: lifecycle-events
 
-**Requirements:** ideate#req:event-drafted, ideate#req:event-approved, ideate#req:event-updated, ideate#req:status-transition-on-approval
+**Requirements:** ideate#req:event-drafted, ideate#req:event-approved, ideate#req:event-updated, ideate#req:event-payload-change-context, ideate#req:change-summary-discipline, ideate#req:status-transition-on-approval
 
-While `status: Draft`, every successful lint pass after a write/edit emits `idea.drafted`. On confirmed user approval, the front-matter transitions Draft → Approved, lint is re-run, and `idea.approved` is emitted exactly once. While `status: Approved`, every successful lint pass after a subsequent write/edit emits `idea.updated` (never `idea.drafted` and never a second `idea.approved`). Skipping, reordering, or misclassifying these emissions is a contract violation.
+While `status: Draft`, every successful lint pass after a write/edit emits `idea.drafted`. On confirmed user approval, the front-matter transitions Draft → Approved, lint is re-run, and `idea.approved` is emitted exactly once. While `status: Approved`, every successful lint pass after a subsequent write/edit emits `idea.updated` (never `idea.drafted` and never a second `idea.approved`). Both `idea.drafted` and `idea.updated` payloads carry `changed_sections`, `previous_revision`, and `change_summary` (null on the first `idea.drafted`, non-null thereafter); the `change_summary` is factual and bounded to two sentences. Skipping, reordering, misclassifying, or generating speculative/editorializing summaries is a contract violation.
 
 ### AC: approval-detection
 
