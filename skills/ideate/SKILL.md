@@ -171,7 +171,7 @@ In both paths, after the artifact is complete, run `specscore lint spec/ideas/<s
 3. If lint now passes: continue. Tell the user what was auto-fixed.
 4. If lint still fails: surface the remaining violations to the user with rule IDs and affected sections. Do NOT loop `--fix`.
 
-**Never auto-fix:** rule `I-002` (Not Doing required) and rule `I-003` (Must-be-true assumption required) violations always require human input. Surface immediately, never `--fix`.
+**Trust the CLI's fix policy.** The skill does NOT carry its own list of which lint rules are safely auto-fixable — that policy lives in the `specscore` CLI. If `--fix` silently repairs a violation that should require human input, file the issue against `specscore`, not this skill.
 
 ### Step 3e — Auto-stage in git
 
@@ -353,6 +353,7 @@ Both `idea.drafted` (re-emissions) and `idea.updated` events carry three change-
 - Jumping to `spec-studio:specify` before user approval
 - Silently bootstrapping `spec/ideas/` without telling the user
 - Looping `specscore lint --fix` more than once
+- Encoding the skill's own list of "rules `--fix` shouldn't touch" — that policy belongs to the `specscore` CLI; if it gets it wrong, fix it there
 - Treating `yes` / `ok` / `sí` / `oui` / `+1` / `🚀` as explicit approval (silent status transition on vague signal)
 - Running `git commit` instead of `git add` (skill stages, never commits)
 - Emitting `idea.drafted` for an Approved artifact, or re-emitting `idea.approved`

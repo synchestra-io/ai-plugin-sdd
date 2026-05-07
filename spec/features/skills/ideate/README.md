@@ -127,7 +127,7 @@ On `specscore lint` failure after a write or edit, the skill MUST:
 3. If lint now passes, continue and tell the user what was auto-fixed.
 4. If lint still fails, surface the remaining violations to the user with rule IDs and affected sections.
 
-The skill MUST NOT loop `--fix` more than once. The skill MUST NOT auto-fix violations of `I-002` (Not Doing required) or `I-003` (Must-be-true assumption required), even if a future `--fix` would attempt them — these always require human input.
+The skill MUST NOT loop `--fix` more than once. **The skill MUST NOT carry its own knowledge of which lint rules are auto-fixable** — that policy belongs to the `specscore` CLI. If `--fix` silently repairs a violation that should require human input, that is a CLI bug to file against `specscore`, not a workaround to encode in this skill.
 
 #### REQ: inline-self-review
 
@@ -256,7 +256,7 @@ The skill detects approval in two tiers: explicit phrases (`approve`, `approved`
 
 **Requirements:** ideate#req:lint-pass, ideate#req:lint-failure-recovery
 
-On lint failure after a write/edit, the skill runs `specscore lint --fix` exactly once, re-runs lint, and either continues (logging what was fixed) or surfaces the remaining violations to the user. The skill never loops `--fix`, and never auto-fixes `I-002` or `I-003` violations.
+On lint failure after a write/edit, the skill runs `specscore lint --fix` exactly once, re-runs lint, and either continues (logging what was fixed) or surfaces the remaining violations to the user. The skill never loops `--fix`, and never encodes its own list of which rules are auto-fixable — the `specscore` CLI owns that policy.
 
 ### AC: skip-condition-respected
 

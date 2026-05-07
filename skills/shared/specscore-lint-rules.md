@@ -53,10 +53,17 @@ Out of scope for this document — defined by planning skills.
 
 ## What Skills Do on Lint Failure
 
-1. **Read lint output** (`specscore lint --json <file>`).
-2. **If fixable inline** (missing section, placeholder, front-matter typo), fix and re-run.
-3. **If requires user input** (ambiguous requirement, missing assumption), surface to user with the specific lint violation.
-4. **Do not bypass lint.** Both skills treat a passing `specscore lint` as a precondition for user-review and event emission.
+1. **Run `specscore lint --fix <file>` exactly once.** Trust the CLI to repair what is safely auto-fixable.
+2. **Re-run `specscore lint <file>`.** If the result is now clean, continue and tell the user what was auto-fixed.
+3. **If lint still fails, surface the remaining violations to the user** with rule IDs and affected sections.
+4. **Do not loop `--fix`.** One attempt only.
+5. **Do not bypass lint.** Skills treat a passing `specscore lint` as a precondition for user-review and event emission.
+
+### CLI owns the fix policy
+
+Skills do NOT carry their own list of which rules are safely auto-fixable. That policy belongs to the `specscore` CLI's `--fix` implementation. If `--fix` silently repairs a violation that should require human input (e.g., inserts a placeholder for a missing `Not Doing` list), that is a CLI bug to file against `specscore` — not a workaround to encode in any skill. This keeps the contract single-sourced and prevents skill-vs-CLI drift.
+
+A future enhancement to the CLI's lint output may include a per-violation `auto_fixable: true/false` metadata field, which skills MAY use to produce richer surfaced messages ("these 2 could be auto-fixed by re-running with `--fix`; these 3 require your input"). Skills MUST NOT depend on this metadata for the basic recovery flow above.
 
 ## Versioning
 

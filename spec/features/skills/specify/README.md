@@ -129,7 +129,7 @@ On `specscore lint` failure, the skill MUST:
 3. If passing, continue and tell the user what was auto-fixed.
 4. If still failing, surface remaining violations to the user with rule IDs and affected files.
 
-The skill MUST NOT loop `--fix` more than once. The skill MUST NOT auto-fix violations that require human input — at minimum, missing `Source Ideas` references, ACs that are not in G/W/T form, and empty Outstanding Questions sections.
+The skill MUST NOT loop `--fix` more than once. **The skill MUST NOT carry its own knowledge of which lint rules are auto-fixable** — that policy belongs to the `specscore` CLI. If `--fix` silently repairs a violation that should require human input, that is a CLI bug to file against `specscore`, not a workaround to encode in this skill.
 
 #### REQ: inline-self-review
 
@@ -283,7 +283,7 @@ When a `specscore new feature` (or equivalent) CLI is on PATH, the skill uses it
 
 **Requirements:** specify#req:lint-pass, specify#req:lint-failure-recovery
 
-After each write/edit, lint is run; on failure, `specscore lint --fix` is attempted exactly once before re-lint. If still failing, remaining violations are surfaced to the user with rule IDs and affected files. The skill never loops `--fix`, never auto-fixes violations that require human input.
+After each write/edit, lint is run; on failure, `specscore lint --fix` is attempted exactly once before re-lint. If still failing, remaining violations are surfaced to the user with rule IDs and affected files. The skill never loops `--fix`, and never encodes its own list of which rules are auto-fixable — the `specscore` CLI owns that policy.
 
 ### AC: reviewer-then-user
 
@@ -316,8 +316,7 @@ Every AC has a recorded Rehearse decision: either a scaffolded stub at `spec/fea
 The skill never transitions to any skill other than `writing-plans`. When the user wants to change an existing Feature, revise-in-place is the default; supersede is reserved for scope changes that invalidate existing ACs and is the user's explicit choice.
 
 ## Outstanding Questions
-
-- What is the exact list of lint violations excluded from `specscore lint --fix` in `lint-failure-recovery`? Currently the spec lists three examples (missing Source Ideas, non-G/W/T ACs, empty Outstanding Questions); the canonical list should live in `shared/specscore-lint-rules.md` and be referenced.
+ Currently the spec lists three examples (missing Source Ideas, non-G/W/T ACs, empty Outstanding Questions); the canonical list should live in `shared/specscore-lint-rules.md` and be referenced.
 - Should `feature.updated` be debounced when the user makes many small edits in succession, or always emitted per lint pass? The latter matches `idea.updated` symmetry but may produce noisy event streams during heavy iteration.
 - When a user invokes `specify` with a clear intent that bypasses an existing Approved Idea, should the skill require the user to either link that Idea via `Source Ideas` or explicitly waive it? Currently silent.
 - Should the status transition on user approval be `Draft → In Progress` (current spec) or `Draft → Approved`? SpecScore's Feature spec uses `In Progress`; ideate uses `Approved`. The two skills currently disagree on terminology.

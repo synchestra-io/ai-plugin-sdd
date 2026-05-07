@@ -23,10 +23,10 @@ AND the skill MUST NOT run `--fix` a second time
 AND the skill surfaces the remaining violations to the user with rule IDs and affected sections
 
 GIVEN the skill has just written or edited the artifact
-AND `specscore lint` reports a violation of `I-002` (Not Doing required) or `I-003` (Must-be-true assumption required)
-WHEN the skill processes the lint failure
-THEN the skill MUST NOT auto-fix the violation, even if a future `--fix` would attempt it
-AND the skill surfaces the violation to the user immediately
+AND `specscore lint --fix` silently repairs a violation that arguably required human input (e.g., it inserts a placeholder `Not Doing` entry)
+WHEN the skill processes the post-`--fix` lint state
+THEN the skill MUST NOT add its own carve-out for that rule
+AND the skill MUST treat the silent fix as a `specscore` CLI bug to be reported against the CLI repo, not as something to compensate for in the skill
 
 ---
 *This document follows the https://specscore.md/scenario-specification*
