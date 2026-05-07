@@ -27,5 +27,9 @@
     "agent-skills",
     "engineering",
     "development"
+  ],
+  "dependencies": [
+    "synchestra",
+    "specscore"
   ]
 }
