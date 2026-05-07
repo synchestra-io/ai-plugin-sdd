@@ -317,7 +317,6 @@ The skill never transitions to any skill other than `writing-plans`. When the us
 
 ## Outstanding Questions
 
-- Should `specify` enforce a maximum requirement count per Feature (e.g., 10) to push back on multi-Feature scope smuggling, or is the decomposition check sufficient?
 - What is the exact list of lint violations excluded from `specscore lint --fix` in `lint-failure-recovery`? Currently the spec lists three examples (missing Source Ideas, non-G/W/T ACs, empty Outstanding Questions); the canonical list should live in `shared/specscore-lint-rules.md` and be referenced.
 - Should `feature.updated` be debounced when the user makes many small edits in succession, or always emitted per lint pass? The latter matches `idea.updated` symmetry but may produce noisy event streams during heavy iteration.
 - When a user invokes `specify` with a clear intent that bypasses an existing Approved Idea, should the skill require the user to either link that Idea via `Source Ideas` or explicitly waive it? Currently silent.
