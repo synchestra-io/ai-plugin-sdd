@@ -135,21 +135,36 @@ payload:
 
 ## Events Emitted by Synchestra (consumed by skills)
 
-### `idea.specified`
-Fired by Synchestra (not by a skill) when one or more Features are created whose `type: feature` front-matter references an Idea's id in a `source_idea:` field. Synchestra:
+### `idea.implementing`
+Fired by Synchestra (not by a skill) when the **first** Feature is created (or transitioned out of `Stable`) whose `**Source Ideas:**` field references an Idea's slug. Synchestra:
 
-1. Transitions the Idea's `status: Approved → Specified`.
-2. Populates the Idea's `promotes_to` with the list of Feature IDs.
+1. Transitions the Idea's `status: Approved → Implementing`.
+2. Populates (or updates) the Idea's `**Promotes To:**` with the list of Feature slugs.
 3. Commits the updated Idea artifact.
-4. Emits `idea.specified`.
+4. Emits `idea.implementing`.
 
 ```yaml
 payload:
   idea_slug: <slug>
-  feature_ids: [<feat-1>, <feat-2>, …]
+  feature_slugs: [<feat-1>, <feat-2>, …]
 ```
 
-**No skill emits this event directly.** Skill authors must not manually edit `promotes_to`.
+### `idea.specified`
+Fired by Synchestra (not by a skill) when **every** Feature listed in an Idea's `**Promotes To:**` reaches `Status: Stable`. Synchestra:
+
+1. Transitions the Idea's `status: Implementing → Specified`.
+2. Commits the updated Idea artifact.
+3. Emits `idea.specified`.
+
+```yaml
+payload:
+  idea_slug: <slug>
+  feature_slugs: [<feat-1>, <feat-2>, …]
+```
+
+This is a stricter event than the previous `idea.specified` (which fired on first Feature linking). The new semantics ("all Features have stabilized") match the canonical SpecScore Idea spec's `Specified` definition.
+
+**No skill emits these events directly.** Skill authors must not manually edit `promotes_to` or set `Status: Implementing` / `Status: Specified` by hand.
 
 ## Event Schema Versioning
 
@@ -164,7 +179,8 @@ payload:
 | `idea.drafted` | `spec-studio:ideate` | Every successful lint pass while `status: Draft` |
 | `idea.approved` | `spec-studio:ideate` | User approves Recommended Direction (exactly once) |
 | `idea.updated` | `spec-studio:ideate` | Every successful lint pass while `status: Approved` |
-| `idea.specified` | synchestra | Feature(s) created from an approved Idea |
+| `idea.implementing` | synchestra | First Feature created with this Idea in `**Source Ideas:**` (Approved → Implementing) |
+| `idea.specified` | synchestra | Every Feature referencing this Idea reaches `Status: Stable` (Implementing → Specified) |
 | `feature.specified` | `spec-studio:specify` | Reviewer-approved, lint-clean Feature write |
 | `feature.approved` | `spec-studio:specify` | User approves the written Feature (exactly once) |
-| `feature.updated` | `spec-studio:specify` | Every successful lint pass while `status` ∈ {In Progress, Stable} after approval |
+| `feature.updated` | `spec-studio:specify` | Every successful lint pass while `status` ∈ {Approved, Implementing, Stable} after approval |

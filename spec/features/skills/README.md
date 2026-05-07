@@ -2,7 +2,7 @@
 
 > [View in Spec Studio](https://specstudio.synchestra.io/project/features?id=spec-studio@synchestra-io@github.com&path=spec%2Ffeatures%2Fskills) — graph, discussions, approvals
 
-**Status:** In Progress
+**Status:** Approved
 
 ## Summary
 
@@ -71,7 +71,7 @@ Each Claude Code skill in the plugin's `skills/` directory is represented as a s
 
 ### Status reflects spec maturity, not implementation maturity
 
-The status column in this Feature's Contents table (and on each sub-feature) reflects how complete the **specification** is, not whether the skill is shipped. A skill that is implemented but whose Feature has not been formally specified is `Draft`. A skill whose Feature has been fully specified and is being iterated is `In Progress`. The implementation status of each skill is tracked separately in [`skills/README.md`](../../../skills/README.md).
+The status column in this Feature's Contents table (and on each sub-feature) reflects how complete the **specification** is, not whether the skill is shipped. A skill that is implemented but whose Feature has not been formally specified is `Draft`. A skill whose Feature has been fully specified and reviewed is `Approved`. Once code is being written from the spec, status becomes `Implementing`. When the spec is locked and changes go through Proposals, it reaches `Stable`. The implementation status of each skill is tracked separately in [`skills/README.md`](../../../skills/README.md).
 
 ### Lifecycle ordering
 

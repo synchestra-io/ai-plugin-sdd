@@ -2,7 +2,7 @@
 
 > [View in Spec Studio](https://specstudio.synchestra.io/project/features?id=spec-studio@synchestra-io@github.com&path=spec%2Ffeatures%2Fskills%2Fideate) — graph, discussions, approvals
 
-**Status:** In Progress
+**Status:** Approved
 
 ## Summary
 
@@ -153,9 +153,13 @@ The boundary is intentionally tight in every language — generic affirmatives l
 
 When the user's response signals positive sentiment but does not contain a recognized explicit approval phrase (e.g., "looks good", "yeah", "nice", "ship it", "+1", `🚀`), the skill MUST treat this as a soft signal and ask one explicit confirmation question (e.g., "Treat that as approval?") before proceeding. The skill MUST NOT silently transition status on a vague signal.
 
+#### REQ: status-transition-under-review
+
+When the skill first presents the lint-clean Idea to the user for review, the skill MUST update the artifact's front-matter `status` from `Draft` to `Under Review`. Subsequent edits during user iteration keep `status: Under Review` until either the user approves (→ `Approved`) or explicitly drops back to `Draft` for substantial rework.
+
 #### REQ: status-transition-on-approval
 
-On confirmed user approval (per `approval-explicit-phrase` or `approval-vague-confirmation`), the skill MUST update the artifact's front-matter `status` from `Draft` to `Approved` and re-run lint to confirm the transition is still valid.
+On confirmed user approval (per `approval-explicit-phrase` or `approval-vague-confirmation`), the skill MUST update the artifact's front-matter `status` from `Under Review` to `Approved` and re-run lint to confirm the transition is still valid.
 
 ### Event emission
 

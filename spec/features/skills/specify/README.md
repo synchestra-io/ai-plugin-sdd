@@ -2,7 +2,7 @@
 
 > [View in Spec Studio](https://specstudio.synchestra.io/project/features?id=spec-studio@synchestra-io@github.com&path=spec%2Ffeatures%2Fskills%2Fspecify) — graph, discussions, approvals
 
-**Status:** In Progress
+**Status:** Approved
 
 ## Summary
 
@@ -78,7 +78,7 @@ The Feature `README.md` MUST follow the SpecScore Feature template: `# Feature: 
 
 #### REQ: feature-status-domain
 
-The front-matter `status` MUST be one of: `Draft`, `In Progress`, `Stable`, `Deprecated`. The skill MUST set `status: Draft` on initial write and transition to `In Progress` (or higher, on user instruction) only after explicit approval.
+The front-matter `status` MUST be one of: `Draft`, `Under Review`, `Approved`, `Implementing`, `Stable`, `Deprecated`. The skill MUST set `status: Draft` on initial write and manage transitions through `Under Review` and `Approved` per the rules below. The skill does NOT manage transitions to `Implementing`, `Stable`, or `Deprecated` — those are owned by downstream skills (`writing-plans` for `Implementing`) or user-driven (for `Stable` and `Deprecated`).
 
 #### REQ: requirement-front-matter
 
@@ -184,9 +184,13 @@ The skill MUST recognize the same explicit-approval phrase set as `spec-studio:i
 
 When the user's response signals positive sentiment but does not contain a recognized explicit phrase (e.g., `looks good`, `yeah`, `nice`, `ship it`, `+1`, `🚀`, `yes`, `ok`, `sí`, `oui`, `да`, `はい`), the skill MUST treat this as a soft signal and ask one explicit confirmation question (e.g., "Treat that as approval?") before proceeding. The skill MUST NOT silently transition status on a vague signal.
 
+#### REQ: status-transition-under-review
+
+When the skill dispatches the reviewer subagent (and/or first presents the Feature for human review), the skill MUST update the Feature's front-matter `status` from `Draft` to `Under Review`. The transition signals to consumers that the Feature is in active review; subsequent edits during reviewer/user iteration keep `status: Under Review` until either reviewer-and-user-approved (→ `Approved`) or the user explicitly drops back to `Draft` for substantial rework.
+
 #### REQ: status-transition-on-approval
 
-On confirmed user approval, the skill MUST update the Feature's front-matter `status` from `Draft` to `In Progress` (the SpecScore equivalent of an approved-but-iterating Feature), re-run lint, and emit `feature.approved`.
+On confirmed user approval (after reviewer subagent returned `Approved` AND the user explicitly approved per `approval-explicit-phrase` / `approval-vague-confirmation`), the skill MUST update the Feature's front-matter `status` from `Under Review` to `Approved`, re-run lint, and emit `feature.approved`. The transition Approved → Implementing is owned by `writing-plans` (when build work begins), not by `specify`.
 
 ### Rehearse stub decision
 
@@ -222,7 +226,7 @@ The skill MUST emit `feature.approved` exactly once, after the user approves the
 
 #### REQ: event-updated
 
-After `feature.approved` has fired, the Feature is alive but not frozen (it remains `In Progress`, or the user later promotes it to `Stable`). On every successful lint pass after a subsequent write or edit, the skill MUST emit `feature.updated`. The skill MUST NOT emit `feature.specified` for an already-approved Feature, and MUST NOT re-emit `feature.approved` for further iteration.
+After `feature.approved` has fired, the Feature is alive but not frozen (it remains `Approved`, transitions to `Implementing` when `writing-plans` runs, then to `Stable` on user instruction). On every successful lint pass after a subsequent write or edit while `status ∈ {Approved, Implementing, Stable}`, the skill MUST emit `feature.updated`. The skill MUST NOT emit `feature.specified` for an already-approved Feature, and MUST NOT re-emit `feature.approved` for further iteration.
 
 #### REQ: event-payload-change-context
 
@@ -321,7 +325,6 @@ The skill never transitions to any skill other than `writing-plans`. When the us
 
 ## Outstanding Questions
  Currently the spec lists three examples (missing Source Ideas, non-G/W/T ACs, empty Outstanding Questions); the canonical list should live in `shared/specscore-lint-rules.md` and be referenced.
-- Should the status transition on user approval be `Draft → In Progress` (current spec) or `Draft → Approved`? SpecScore's Feature spec uses `In Progress`; ideate uses `Approved`. The two skills currently disagree on terminology.
 - **Reviewer registration mechanism.** The skill supports additional reviewers per `reviewer-extension-hook`, but the registration mechanism is unspecified. Candidate mechanisms: (a) project setting in a config file (`.synchestra/config.yaml`), (b) plugin manifest entries, (c) convention-based discovery (e.g., scan `spec/reviewers/<name>/`), (d) explicit invocation flag. Defer the choice until at least one real second reviewer ships and the consumer's needs are concrete.
 - **When does the reviewer concept earn its own Feature?** The built-in reviewer is currently described in this Feature plus a prose prompt at `skills/specify/references/reviewer-prompt.md`. Once a second reviewer ships, or once the baseline blocker list grows past ~8 entries, promote the reviewer to its own SpecScore Feature at `spec/features/spec-document-reviewer/` (sibling, not sub-feature, since `plan` and `ship` may also load reviewers).
 

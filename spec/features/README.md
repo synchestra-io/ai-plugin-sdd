@@ -8,7 +8,7 @@ Feature specifications for the Spec Studio plugin. This index lists every top-le
 
 | Feature | Status | Description |
 |---------|--------|-------------|
-| [`skills/`](skills/README.md) | In Progress | Umbrella feature for the per-skill sub-features that specify each Claude Code skill's purpose, gates, inputs, outputs, and lifecycle position. |
+| [`skills/`](skills/README.md) | Approved | Umbrella feature for the per-skill sub-features that specify each Claude Code skill's purpose, gates, inputs, outputs, and lifecycle position. |
 
 ### skills
 

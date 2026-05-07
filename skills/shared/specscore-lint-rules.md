@@ -31,7 +31,7 @@ Both `spec-studio:ideate` and `spec-studio:specify` assume `specscore lint` enfo
 | I-002 | `Not Doing` section is non-empty (explicit exclusions required) | error |
 | I-003 | `Key Assumptions to Validate` lists at least one Must-be-true assumption | error |
 | I-004 | `Problem Statement` contains exactly one "How Might We" framing | warn |
-| I-005 | `status` ∈ {`Draft`, `Under Review`, `Approved`, `Specified`, `Archived`} | error |
+| I-005 | `status` ∈ {`Draft`, `Under Review`, `Approved`, `Implementing`, `Specified`, `Archived`} | error |
 | I-006 | If `status: Specified`, `promotes_to` must be non-empty | error |
 | I-007 | If `status ∈ {Draft, Under Review, Approved}`, `promotes_to` may be empty | info |
 
@@ -43,7 +43,7 @@ Both `spec-studio:ideate` and `spec-studio:specify` assume `specscore lint` enfo
 | F-002 | At least one requirement file in `spec/features/<slug>/requirements/` | error |
 | F-003 | Each requirement has at least one acceptance criterion | error |
 | F-004 | Each acceptance criterion uses `Given / When / Then` format | error |
-| F-005 | `status` ∈ {`Draft`, `Approved`, `In Progress`, `Shipped`, `Archived`} | error |
+| F-005 | `status` ∈ {`Draft`, `Under Review`, `Approved`, `Implementing`, `Stable`, `Deprecated`} | error |
 | F-006 | If `supersedes` present, referenced Feature exists and has `status: Archived` | error |
 | F-007 | Architecture section present when Feature is non-trivial | warn |
 
