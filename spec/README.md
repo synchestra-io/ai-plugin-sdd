@@ -14,7 +14,7 @@ This directory contains the SpecScore-formatted specifications that drive SpecSt
 
 ## Conventions
 
-All artifacts under `spec/` follow [SpecScore](https://specscore.org/) conventions and lint clean against `specscore spec lint`. Where the layout prescribed by `specstudio:specify` conflicts with `specscore` lint rules, **SpecScore wins** — see the canonical-spelling rule in `synchestra-marketing/branding/canonical-spelling.md` for the equivalent governance rule on naming.
+All artifacts under `spec/` follow [SpecScore](https://specscore.org/) conventions and lint clean against `specscore spec lint`. Where the layout prescribed by `specstudio:specify` conflicts with `specscore` lint rules, **SpecScore wins**.
 
 ## Outstanding Questions
 

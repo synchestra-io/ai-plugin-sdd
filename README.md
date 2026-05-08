@@ -4,7 +4,7 @@
 
 AI skills (and a coming Web UI) for efficient spec-driven development — the full lifecycle: **specify, plan, build, verify, recap, review, ship.** SpecStudio turns vague ideas into lintable, testable specifications and gates implementation on those specifications being clear, complete, and approved.
 
-This repo (`specstudio-skills`) is the Claude Code plugin surface of SpecStudio: skills, commands, and supporting tooling for AI coding agents. The web client lives at [`specstudio-web`](https://github.com/synchestra-io/specstudio-web) (planned). See [the SpecStudio product page](https://github.com/synchestra-io/synchestra-marketing/blob/main/ecosystem/products/specstudio.md) for the full picture.
+This repo (`specstudio-skills`) is the Claude Code plugin surface of SpecStudio: skills, commands, and supporting tooling for AI coding agents. The web client lives at [`specstudio-web`](https://github.com/synchestra-io/specstudio-web) (planned).
 
 ## Why a studio
 
@@ -90,7 +90,7 @@ The SpecStudio family follows the `specstudio-<role>` stem — every repo in the
 
 The wrapper-prefix `ai-plugin-*` (used by [`ai-plugin-synchestra`](https://github.com/synchestra-io/ai-plugin-synchestra) and [`ai-plugin-specscore`](https://github.com/synchestra-io/ai-plugin-specscore)) is reserved for thin CLI wrappers — SpecStudio is a product, not a wrapper.
 
-Brand spelling: `SpecStudio` in copy, `specstudio` in identifiers (no hyphen, no space). See [the canonical spelling rule](https://github.com/synchestra-io/synchestra-marketing/blob/main/branding/canonical-spelling.md). The brand consolidation that retired the legacy hyphenated form is documented in [`2026-05-07-specstudio-brand-consolidation.md`](https://github.com/synchestra-io/synchestra-marketing/blob/main/decisions/2026-05-07-specstudio-brand-consolidation.md).
+Brand spelling: `SpecStudio` in copy, `specstudio` in identifiers (no hyphen, no space).
 
 ## Dogfooding
 

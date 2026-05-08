@@ -4,7 +4,7 @@
 
 How **SpecStudio skills** (`specstudio:ideate`, `specstudio:specify`, …) sit alongside other tools in the Spec-Driven Development (SDD) and AI-engineering-discipline space.
 
-These notes are research, not contracts. They live here (rather than in [`synchestra-marketing/competitors/`](https://github.com/synchestra-io/synchestra-marketing/tree/main/competitors)) because the comparison subject is the *skill set itself* — the design choices behind each skill, where they came from, what they enforce. Product-level competitive strategy for the broader Synchestra ecosystem (SpecScore + Synchestra + Rehearse) lives in `synchestra-marketing` and links back here for the skill-layer detail.
+These notes are research, not contracts. The comparison subject is the *skill set itself* — the design choices behind each skill, where they came from, what they enforce.
 
 ---
 
@@ -156,7 +156,7 @@ The convention-file ecosystems (Cursor rules, AGENTS.md, etc.) matter more for *
 
 When a new tool enters the SDD or agent-discipline space:
 
-1. Decide whether the comparison subject is the **skill set** (lives here) or the **broader product** (lives in `synchestra-marketing/competitors/`). Cross-link both directions.
+1. Confirm the comparison subject is the **skill set** — design choices, gating, output format, runtime surface. Tools whose overlap is purely product-level (pricing, distribution, business model) don't belong in this tree.
 2. Create `spec/research/competitors/<slug>/` with a `README.md` overview.
 3. If the comparison has a CLI/product-level dimension *and* a skill-layer dimension, split them into separate files (`README.md` for product-level, `vs-specstudio-skills.md` for skill-layer) — see [`github-spec-kit/`](github-spec-kit/) as the pattern.
 4. Cite sources at the top of each doc with fetch date.
@@ -167,7 +167,7 @@ When a new tool enters the SDD or agent-discipline space:
 - **Date every analysis.** Competitor docs rot fast — the date in the front-matter tells the reader how stale the comparison is.
 - **Quote, don't paraphrase, key claims.** When characterizing a competitor's design choice, link the source so the original is verifiable.
 - **No speculation without labels.** If a capability is inferred from marketing rather than shipped product, say so explicitly.
-- **No marketing language about ourselves.** This tree is for thinking, not selling. Marketing copy belongs in `synchestra-marketing`.
+- **No marketing language about ourselves.** This tree is for thinking, not selling.
 
 ---
 *This document follows the https://specscore.md/feature-specification*
