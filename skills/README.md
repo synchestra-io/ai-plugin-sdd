@@ -8,6 +8,7 @@ For the product overview and install instructions, see the [repo README](../READ
 
 ```mermaid
 flowchart LR
+    init([init]):::shipped -.bootstrap.-> ideate
     intent([clear intent]):::input
     intent --> specify
     ideate([ideate]):::shipped --> specify([specify]):::shipped --> plan([plan]):::defined --> build([build]):::roadmap --> verify([verify]):::roadmap --> recap([recap]):::roadmap --> review([review]):::roadmap --> ship([ship]):::roadmap
@@ -18,12 +19,13 @@ flowchart LR
     classDef input fill:none,stroke:#888,stroke-dasharray:4 3,color:#555
 ```
 
-Each phase consumes the previous phase's lint-clean artifact and gates the next. Green = Shipped, yellow = Defined, gray = Roadmap. `specify` also accepts a clear buildable intent directly — `ideate` is skippable when the problem and scope are already obvious.
+Each in-line phase consumes the previous phase's lint-clean artifact and gates the next. Green = Shipped, yellow = Defined, gray = Roadmap. `specify` also accepts a clear buildable intent directly — `ideate` is skippable when the problem and scope are already obvious. `init` sits outside the loop: it's the one-time-per-project bootstrap that creates `specscore.yaml` + the `spec/` tree + the canonical instruction snippet, then hands off to `ideate` / `specify` for normal use.
 
 ## Status
 
 | Skill | Status | Purpose |
 |---|---|---|
+| [`init`](./init/SKILL.md) | Shipped | Bootstrap a SpecScore-managed project: `specscore.yaml`, `spec/` tree, instruction snippet, orchestration setup. One-time-per-project. |
 | [`ideate`](./ideate/SKILL.md) | Shipped | Refine raw ideas into lint-clean SpecScore Idea artifacts. |
 | [`specify`](./specify/SKILL.md) | Shipped | Turn an approved Idea into a lint-clean SpecScore Feature with G/W/T acceptance criteria. |
 | [`plan`](../spec/ideas/specstudio-plan-skill.md) | Defined | Turn an approved Feature into an ordered, AC-mapped Plan artifact. |
@@ -42,6 +44,16 @@ Each phase consumes the previous phase's lint-clean artifact and gates the next.
 The status cell links to the most-precise artifact that exists for each skill (`SKILL.md` for shipped, the Idea file for defined, no link for roadmap).
 
 ## Skills
+
+### `init` — Shipped
+
+Bootstraps a SpecScore-managed project in one wizard-driven step. Detects current state by direct repo inspection, then idempotently creates `specscore.yaml`, scaffolds the `spec/` tree, pastes the canonical Producer-shape instruction snippet into the right platform agent-instructions file, and runs orchestration setup.
+
+- **Output:** `specscore.yaml` + lint-clean `spec/{,ideas,features}/README.md` + the canonical snippet pasted into one of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` / `.cursor/rules/specstudio.md` per the explicit platform-detection rule.
+- **Triggers:** `specstudio:init`, `/specstudio:init`, "set up specstudio", "init synchestra project", "bootstrap a spec repo".
+- **Two modes:** default (full wizard) and `--update` (drift-only reconciliation).
+- **CLI delegation:** prefers `specscore init` and `synchestra init`; AI-agent fallback when CLIs absent. CLI installation is delegated to `specscore:install` and `synchestra:install` with explicit user consent.
+- **Source:** [`init/SKILL.md`](./init/SKILL.md)
 
 ### `ideate` — Shipped
 
