@@ -10,10 +10,10 @@ THEN the emitted `idea.drafted` event payload contains `changed_sections: null`
 AND `previous_revision: null`
 AND `change_summary: null`
 
-GIVEN the same Idea is edited (still `status: Draft`) — the user adds a new entry to `Open Questions`
+GIVEN the same Idea is edited (still `**Status:** Draft`) — the user adds a new entry to `Outstanding Questions`
 AND the edit lints clean
 WHEN the skill emits the next `idea.drafted` event
-THEN the payload contains `changed_sections: ["Open Questions"]`
+THEN the payload contains `changed_sections: ["Outstanding Questions"]`
 AND `previous_revision` is the git SHA of the prior emission's revision
 AND `change_summary` is a non-null string of at most two sentences describing the change
 

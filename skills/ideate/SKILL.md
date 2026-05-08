@@ -55,7 +55,7 @@ Create a task for each and complete in order:
 7. **Auto-stage** every file you created (`spec/ideas/<slug>.md`, plus the bootstrap files if any) with `git add`. Tell the user the staged paths. Never commit on the user's behalf.
 8. **Inline self-review** — placeholders, contradictions, ambiguity, scope.
 9. **User review** — ask the user to review and approve the Recommended Direction. Recognize explicit approval phrases (`approve`, `approved`, `accept`, `accepted`, `lgtm`, plus their semantic equivalents in the user's language); treat vague positive signals as soft and ask one explicit confirmation question.
-10. **Emit events** — `idea.drafted` on every successful lint pass while `status: Draft`; `idea.approved` exactly once on approval; `idea.updated` on every successful lint pass while `status: Approved`. Both `drafted` and `updated` payloads carry `changed_sections`, `previous_revision`, and a factual `change_summary` (≤2 sentences). See [synchestra-events.md](../shared/synchestra-events.md).
+10. **Emit events** — `idea.drafted` on every successful lint pass while `**Status:** Draft`; `idea.approved` exactly once on approval; `idea.updated` on every successful lint pass while `**Status:** Approved`. Both `drafted` and `updated` payloads carry `changed_sections`, `previous_revision`, and a factual `change_summary` (≤2 sentences). See [synchestra-events.md](../shared/synchestra-events.md).
 
 ## Phase 1 — Understand & Expand (Divergent)
 
@@ -109,7 +109,7 @@ After the user reacts to Phase 1, shift to convergent mode. Cadence becomes **si
 Before invoking the CLI or writing the file directly, check that `spec/ideas/` exists. If not:
 
 1. Create the directory.
-2. Create `spec/ideas/README.md` as a lint-clean Index artifact (`type: index`, `status: Stable`, empty Contents table, `Outstanding Questions: None at this time.`). The CLI will append to this index when it scaffolds the artifact; the fallback path appends manually.
+2. Create `spec/ideas/README.md` as a lint-clean Index artifact (title `# Ideas Index`, `**Status:** Stable`, empty Contents table, `Outstanding Questions: None at this time.`, adherence footer). The CLI will append to this index when it scaffolds the artifact; the fallback path appends manually.
 3. Tell the user, e.g., *"Bootstrapped `spec/ideas/` and `spec/ideas/README.md` (this project didn't have an ideas tree yet)."*
 
 This step MUST NOT happen silently.
@@ -187,20 +187,17 @@ Report the staged paths to the user in the same response. Never run `git commit`
 
 ### Schema (authoritative — used by both paths)
 
-Write to `spec/ideas/<slug>.md` using **exactly this schema**:
+Write to `spec/ideas/<slug>.md` using **exactly this schema**. The schema follows canonical SpecScore: title prefix is the dispatch key (`# Idea: …`), and metadata lives in bold-prefixed body lines immediately after the title — **no YAML front-matter**.
 
 ```markdown
----
-type: idea
-id: idea-<slug>
-status: Draft
-date: YYYY-MM-DD
-owner: <author>
-promotes_to: []          # Managed by Synchestra. Do NOT edit manually.
-supersedes: []
----
+# Idea: <Idea Name>
 
-# <Idea Name>
+**Status:** Draft
+**Date:** YYYY-MM-DD
+**Owner:** <author identifier>
+**Promotes To:** —
+**Supersedes:** —
+**Related Ideas:** —
 
 ## Problem Statement
 <One "How Might We…" sentence>
@@ -234,9 +231,18 @@ supersedes: []
 - **Existing Features affected:** <list or "none">
 - **Dependencies:** <other Ideas or in-flight work>
 
-## Open Questions
+## Outstanding Questions
 - <Question that needs answering before promotion to Feature(s)>
+
+---
+*This document follows the https://specscore.md/idea-specification*
 ```
+
+Notes:
+- The canonical id is the filename slug; there is no separate `id` field.
+- `**Promotes To:**` is **managed state** — Synchestra populates it when a Feature is created that references this Idea. Authors MUST NOT edit it manually.
+- `**Supersedes:**` and `**Related Ideas:**` MUST be present with value `—` when empty.
+- `**Archive Reason:**` MUST be present when (and only when) `**Status:** Archived`.
 
 **The "Not Doing" list is mandatory** — lint rule `I-002` will fail without it.
 
@@ -280,13 +286,13 @@ Wait for the user. Proceed only on a follow-up explicit phrase. Never silently t
 
 ### On confirmed approval
 
-- Update `status: Draft → Approved` in the front-matter.
+- Update `**Status:** Draft → Approved` in the body metadata.
 - Re-run lint.
 - Emit `idea.approved` event (exactly once per Idea).
 
 ## Post-Approval Iteration
 
-Once `status: Approved`, the Idea is alive but not frozen. The user MAY edit it further (refine the Recommended Direction, add an Open Question, update assumptions). On every subsequent successful lint pass after a write or edit:
+Once `**Status:** Approved`, the Idea is alive but not frozen. The user MAY edit it further (refine the Recommended Direction, add an Outstanding Question, update assumptions). On every subsequent successful lint pass after a write or edit:
 
 - Status remains `Approved` (never roll back to `Draft`).
 - Emit `idea.updated` (NOT `idea.drafted`).
@@ -319,12 +325,12 @@ Both `idea.drafted` (re-emissions) and `idea.updated` events carry three change-
 
 **Out of scope for this skill.** Synchestra handles promotion:
 
-1. When `specstudio:specify` (or the user) creates a Feature with `source_idea: <idea-id>` in its front-matter, Synchestra detects the link.
-2. Synchestra transitions the Idea `status: Approved → Specified`.
-3. Synchestra auto-populates the Idea's `promotes_to` with the list of Feature IDs.
+1. When `specstudio:specify` (or the user) creates a Feature with a `**Source Ideas:**` line that references this Idea's slug, Synchestra detects the link.
+2. Synchestra transitions the Idea `**Status:** Approved → Specified`.
+3. Synchestra auto-populates the Idea's `**Promotes To:**` line with the list of Feature slugs.
 4. Synchestra emits `idea.specified`.
 
-**Do not manually edit `promotes_to`.** It's managed state.
+**Do not manually edit `**Promotes To:**`.** It's managed state.
 
 ## Verification
 
@@ -337,7 +343,7 @@ Both `idea.drafted` (re-emissions) and `idea.updated` events carry three change-
 - [ ] Assumptions audited across Must/Should/Might tiers
 - [ ] "Not Doing" list non-empty
 - [ ] User approved the Recommended Direction (explicit phrase OR vague-signal followed by explicit confirmation)
-- [ ] `status` is `Approved` (if approved) or `Draft` (if not yet)
+- [ ] `**Status:**` is `Approved` (if approved) or `Draft` (if not yet)
 - [ ] Events emitted per state: `idea.drafted` while Draft; `idea.approved` once on transition; `idea.updated` while Approved
 - [ ] `idea.drafted` and `idea.updated` payloads include `changed_sections`, `previous_revision`, and a factual `change_summary` (all `null` on first `idea.drafted`, non-null thereafter)
 
@@ -349,7 +355,7 @@ Both `idea.drafted` (re-emissions) and `idea.updated` events carry three change-
 - Yes-machining weak ideas instead of pushing back
 - Empty "Not Doing" list
 - Writing to `docs/ideas/` instead of `spec/ideas/`
-- Manually editing `promotes_to`
+- Manually editing `**Promotes To:**` (managed state — Synchestra owns it)
 - Jumping to `specstudio:specify` before user approval
 - Silently bootstrapping `spec/ideas/` without telling the user
 - Looping `specscore lint --fix` more than once

@@ -4,14 +4,14 @@
 
 ## Steps
 
-GIVEN a Feature at `spec/features/checkout-v2/` with front-matter `status: In Progress`
+GIVEN a Feature at `spec/features/checkout-v2/` with `**Status:** Implementing` body metadata
 AND `feature.approved` was previously emitted exactly once
-WHEN the user edits the Feature (e.g., adds a new requirement file)
+WHEN the user edits the Feature (e.g., adds a new `#### REQ:` block under `## Behavior`)
 AND `specscore lint spec/features/checkout-v2/` passes
 THEN the skill emits `feature.updated`
 AND the skill does NOT emit `feature.specified`
 AND the skill does NOT re-emit `feature.approved`
-AND the front-matter `status` remains `In Progress`
+AND the `**Status:**` body-metadata value remains `Implementing`
 
 GIVEN the same approved Feature is edited multiple times in succession
 WHEN each edit lints clean

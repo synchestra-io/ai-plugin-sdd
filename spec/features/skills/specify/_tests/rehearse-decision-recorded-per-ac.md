@@ -6,7 +6,7 @@
 
 GIVEN a Feature with three ACs, two of which are testable (e.g., HTTP-surface) and one of which is subjective (e.g., "Then the dashboard feels uncluttered")
 WHEN the skill applies the per-AC Rehearse heuristic
-THEN the two testable ACs each have a scaffolded stub at `spec/features/<slug>/_tests/<scenario-slug>.md` with front-matter `status: pending`
+THEN the two testable ACs each have a scaffolded stub at `spec/features/<slug>/_tests/<scenario-slug>.md` with `**Status:** pending` body metadata
 AND the subjective AC has a documented skip-reason in the Feature `README.md` under a `## Rehearse Integration` subsection
 AND no AC is silently ignored
 

@@ -30,7 +30,7 @@ Agent tool (subagent_type: general-purpose):
     | YAGNI | No unrequested features; no over-engineering |
     | Assumption carryover | If source Idea exists, its Must-be-true assumptions are either addressed by ACs or explicitly deferred |
     | Rehearse integration | Either stubs exist for testable ACs, OR a skip-reason is recorded |
-    | Front-matter | type/id/status/date/owner present; source_idea links to a real Idea if set |
+    | Body metadata | Title `# Feature: <name>`; `**Status:**`, `**Date:**`, `**Owner:**` present in that order immediately after title; `**Source Ideas:**` and `**Supersedes:**` present (value `—` if empty); when `**Source Ideas:**` is non-empty, each referenced slug resolves to a real Idea |
 
     ## Calibration
 

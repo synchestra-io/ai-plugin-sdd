@@ -1,13 +1,3 @@
----
-type: idea
-id: idea-specstudio-plan-skill
-status: Approved
-date: 2026-04-20
-owner: alexander.trakhimenok
-promotes_to: []
-supersedes: []
----
-
 # Idea: SpecStudio plan skill
 
 **Status:** Approved
@@ -25,7 +15,7 @@ How might we turn an approved SpecScore Feature into a small set of verifiable, 
 
 SpecStudio today ships two skills: `ideate` produces a lint-clean `spec/ideas/<slug>.md`, and `specify` produces a lint-clean `spec/features/<slug>/`. The README's roadmap names `plan` as the next lifecycle phase, but no skill exists to bridge from a lint-clean Feature to actionable work.
 
-In the gap, users fall back to generic planning skills (`superpowers:writing-plans`, `agent-skills:planning-and-task-breakdown`). Those skills are fine as process, but they are SpecScore-blind: they do not consume Feature front-matter, they do not map tasks to acceptance-criteria IDs, they do not lint, and they do not emit Synchestra events. That means the spec↔code coherence story — a stated SpecStudio principle — breaks exactly at the handoff where it matters most.
+In the gap, users fall back to generic planning skills (`superpowers:writing-plans`, `agent-skills:planning-and-task-breakdown`). Those skills are fine as process, but they are SpecScore-blind: they do not consume Feature body metadata, they do not map tasks to acceptance-criteria IDs, they do not lint, and they do not emit Synchestra events. That means the spec↔code coherence story — a stated SpecStudio principle — breaks exactly at the handoff where it matters most.
 
 This Idea proposes a `specstudio:plan` skill that consumes an approved Feature and produces a lint-clean `spec/plans/<slug>.md` of ordered, AC-mapped tasks, preserving the same gate discipline `ideate` and `specify` already enforce.
 
@@ -75,7 +65,7 @@ A two-week spike: implement `specstudio:plan` as a single skill folder under `sk
 
 - Does the plan slug mirror the source Feature slug 1:1, or can one Feature have multiple Plans (e.g., alternative breakdowns)?
 - Should `plan` emit `plan.drafted` / `plan.approved` events, or reuse the Feature's event stream?
-- Does the Plan front-matter need an explicit `source_feature:` field, mirroring `source_idea:` on Features, so Synchestra can auto-populate backlinks?
+- Does the Plan body metadata need an explicit `**Source Feature:**` line, mirroring `**Source Ideas:**` on Features, so Synchestra can auto-populate backlinks?
 - Should lint enforce that every AC ID in the source Feature is covered by at least one task, or is that a soft warning?
 
 ---

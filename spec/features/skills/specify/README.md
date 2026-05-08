@@ -12,7 +12,7 @@ The `specstudio:specify` skill turns an approved SpecScore Idea — or a clear b
 
 Even when an Idea is well-formed, the jump from "approved direction" to "buildable contract" is non-trivial. Without a structured skill, that jump happens ad-hoc: requirements get scattered into prose, acceptance criteria get omitted or written as vibes, the Source Idea linkage gets lost, Rehearse stubs are forgotten, and the Feature ends up as a description rather than a contract that downstream skills (`plan`, `build`, `verify`) can consume.
 
-`specify` exists to enforce the structural discipline of a SpecScore Feature — typed front-matter, requirement decomposition, G/W/T ACs, reviewer-subagent quality gate, Rehearse coverage decision — without forcing the user to memorize the schema. The Feature defines exactly what that discipline must look like, so the artifact is machine-verifiable and downstream skills can rely on it.
+`specify` exists to enforce the structural discipline of a SpecScore Feature — canonical title prefix, body-metadata header fields, inline `#### REQ:` requirement decomposition, G/W/T ACs, reviewer-subagent quality gate, Rehearse coverage decision — without forcing the user to memorize the schema. The Feature defines exactly what that discipline must look like, so the artifact is machine-verifiable and downstream skills can rely on it.
 
 ## Behavior
 
@@ -26,7 +26,7 @@ The skill MUST respond to the triggers `specify`, `/specify`, "spec this out", a
 
 #### REQ: accepts-idea-or-intent
 
-The skill MUST accept two kinds of input: (a) an approved Idea (path to `spec/ideas/<slug>.md` with front-matter `status: Approved`), or (b) a clear buildable intent stated directly by the user. When (a) is the input, the skill MUST load the Idea and surface its assumptions, alternatives, and Not-Doing list as initial Feature material. When (b) is the input, the skill MUST still elicit the same structural elements before proceeding.
+The skill MUST accept two kinds of input: (a) an approved Idea (path to `spec/ideas/<slug>.md` with `**Status:** Approved`), or (b) a clear buildable intent stated directly by the user. When (a) is the input, the skill MUST load the Idea and surface its assumptions, alternatives, and Not-Doing list as initial Feature material. When (b) is the input, the skill MUST still elicit the same structural elements before proceeding.
 
 #### REQ: clear-intent-criterion
 
@@ -40,7 +40,7 @@ The skill enforces a hard gate downstream — once invoked, it must produce a co
 
 The skill MUST NOT invoke `writing-plans`, `frontend-design`, `mcp-builder`, or ANY implementation skill until ALL FIVE conditions hold:
 
-1. The Feature artifact exists at `spec/features/<slug>/README.md` plus at least one `spec/features/<slug>/requirements/*.md`.
+1. The Feature artifact exists at `spec/features/<slug>/README.md` and contains at least one `#### REQ: <slug>` requirement inside the `## Behavior` section.
 2. Each requirement has ≥1 acceptance criterion in `Given / When / Then` format.
 3. `specscore lint spec/features/<slug>/` exits zero.
 4. The spec-document reviewer subagent returned `Approved`.
@@ -58,7 +58,7 @@ The skill MUST write Feature artifacts under `spec/features/<slug>/` relative to
 
 #### REQ: artifact-structure
 
-The Feature directory MUST contain a `README.md` (the Feature spec per the SpecScore Feature schema) and a `requirements/` subdirectory with at least one `<req-slug>.md` requirement file. Optional sub-directories: `_tests/` (Rehearse scenarios), `assets/` (diagrams, mockups), `proposals/` (post-Stable change requests).
+The Feature directory MUST contain a single `README.md` — the Feature artifact per the canonical SpecScore Feature spec, with topic-grouped `### <Topic>` headings and `#### REQ: <slug>` requirements inline inside `## Behavior`. Requirements are a heading convention, not a separate file artifact (per `https://specscore.md/requirement-specification`). Optional sub-directories: `_tests/` (Rehearse scenarios), `assets/` (diagrams, mockups), `proposals/` (post-Stable change requests).
 
 #### REQ: no-docs-path
 
@@ -66,11 +66,11 @@ The skill MUST NOT write Feature artifacts to `docs/features/`, `docs/superpower
 
 #### REQ: auto-create-features-dir
 
-When invoked in a project that does not yet have a `spec/features/` directory, the skill MUST create the directory and a lint-clean `spec/features/README.md` index file before writing the first Feature. The auto-created index MUST be lint-clean (`type: index`, empty Contents table, "None at this time." Outstanding Questions). Auto-creation MUST NOT happen silently — the skill MUST tell the user it is bootstrapping the directory.
+When invoked in a project that does not yet have a `spec/features/` directory, the skill MUST create the directory and a lint-clean `spec/features/README.md` index file before writing the first Feature. The auto-created index MUST be lint-clean per the canonical SpecScore Features Index spec (title `# Features`, `**Status:** Stable`, empty Contents table, "None at this time." Outstanding Questions, adherence footer). Auto-creation MUST NOT happen silently — the skill MUST tell the user it is bootstrapping the directory.
 
-### Schema and front-matter
+### Schema and body metadata
 
-The Feature artifact conforms to the canonical SpecScore Feature spec.
+The Feature artifact conforms to the canonical SpecScore Feature spec — title-prefix dispatch key, bold-prefixed body metadata, fixed section schema, no YAML front-matter.
 
 #### REQ: feature-schema-conformance
 
@@ -78,11 +78,11 @@ The Feature `README.md` MUST follow the SpecScore Feature template: `# Feature: 
 
 #### REQ: feature-status-domain
 
-The front-matter `status` MUST be one of: `Draft`, `Under Review`, `Approved`, `Implementing`, `Stable`, `Deprecated`. The skill MUST set `status: Draft` on initial write and manage transitions through `Under Review` and `Approved` per the rules below. The skill does NOT manage transitions to `Implementing`, `Stable`, or `Deprecated` — those are owned by downstream skills (`writing-plans` for `Implementing`) or user-driven (for `Stable` and `Deprecated`).
+The `**Status:**` body-metadata value MUST be one of: `Draft`, `Under Review`, `Approved`, `Implementing`, `Stable`, `Deprecated`. The skill MUST set `**Status:** Draft` on initial write and manage transitions through `Under Review` and `Approved` per the rules below. The skill does NOT manage transitions to `Implementing`, `Stable`, or `Deprecated` — those are owned by downstream skills (`writing-plans` for `Implementing`) or user-driven (for `Stable` and `Deprecated`).
 
-#### REQ: requirement-front-matter
+#### REQ: requirement-format
 
-Each requirement file MUST have YAML front-matter including `type: requirement`, `id: req-<feat-slug>-<req-slug>`, `feature: feat-<slug>`, and `status`. The body MUST contain a one-paragraph description and at least one `### AC-<n>: <name>` block in `Given / When / Then` form.
+Requirements MUST be `#### REQ: <slug>` sub-headings scoped under a `### <Topic>` heading inside `## Behavior` — never separate files, never directly under `## Behavior` without a topic heading. Each requirement is followed by a one-paragraph prose description that states the enforceable rule (typically using MUST/SHOULD/MAY language). Acceptance criteria for the requirement live either inline beneath the REQ block or grouped in `## Acceptance Criteria` with explicit `verifies REQ:<slug>` back-references — both forms are valid; choose one and be consistent within a Feature.
 
 #### REQ: ac-format
 
@@ -98,7 +98,7 @@ When the Feature originates from one or more approved Ideas, the Feature `README
 
 #### REQ: no-manual-promotes-to
 
-The skill MUST NOT manually edit any referenced Idea's `promotes_to` or `Status` field. Synchestra reconciles those in response to the Feature declaring its `Source Ideas`. The Feature is the only authoritative input; the Idea side is managed.
+The skill MUST NOT manually edit any referenced Idea's `**Promotes To:**` or `**Status:**` body-metadata lines. Synchestra reconciles those in response to the Feature declaring its `**Source Ideas:**`. The Feature is the only authoritative input; the Idea side is managed.
 
 #### REQ: related-idea-surfacing
 
@@ -114,7 +114,7 @@ When a `specscore new feature` (or equivalent) CLI command is on PATH, the skill
 
 #### REQ: fallback-direct-write
 
-When no scaffolding CLI is available, the skill MUST fall back to direct file writes using the authoritative SpecScore Feature schema. CLI and fallback paths MUST produce schema-equivalent artifacts (identical front-matter, identical sections, identical required content). They MAY differ in cosmetic ways (whitespace, blank lines, comment style).
+When no scaffolding CLI is available, the skill MUST fall back to direct file writes using the authoritative SpecScore Feature schema. CLI and fallback paths MUST produce schema-equivalent artifacts (identical title prefix, identical body-metadata fields, identical sections, identical required content). They MAY differ in cosmetic ways (whitespace, blank lines, comment style).
 
 ### Lint and self-review
 
@@ -186,11 +186,11 @@ When the user's response signals positive sentiment but does not contain a recog
 
 #### REQ: status-transition-under-review
 
-When the skill dispatches the reviewer subagent (and/or first presents the Feature for human review), the skill MUST update the Feature's front-matter `status` from `Draft` to `Under Review`. The transition signals to consumers that the Feature is in active review; subsequent edits during reviewer/user iteration keep `status: Under Review` until either reviewer-and-user-approved (→ `Approved`) or the user explicitly drops back to `Draft` for substantial rework.
+When the skill dispatches the reviewer subagent (and/or first presents the Feature for human review), the skill MUST update the Feature's `**Status:**` body-metadata line from `Draft` to `Under Review`. The transition signals to consumers that the Feature is in active review; subsequent edits during reviewer/user iteration keep `**Status:** Under Review` until either reviewer-and-user-approved (→ `Approved`) or the user explicitly drops back to `Draft` for substantial rework.
 
 #### REQ: status-transition-on-approval
 
-On confirmed user approval (after reviewer subagent returned `Approved` AND the user explicitly approved per `approval-explicit-phrase` / `approval-vague-confirmation`), the skill MUST update the Feature's front-matter `status` from `Under Review` to `Approved`, re-run lint, and emit `feature.approved`. The transition Approved → Implementing is owned by `writing-plans` (when build work begins), not by `specify`.
+On confirmed user approval (after reviewer subagent returned `Approved` AND the user explicitly approved per `approval-explicit-phrase` / `approval-vague-confirmation`), the skill MUST update the Feature's `**Status:**` body-metadata line from `Under Review` to `Approved`, re-run lint, and emit `feature.approved`. The transition Approved → Implementing is owned by `writing-plans` (when build work begins), not by `specify`.
 
 ### Rehearse stub decision
 
@@ -198,7 +198,7 @@ For each AC, a per-AC decision determines whether to scaffold a Rehearse test st
 
 #### REQ: rehearse-per-ac-decision
 
-For every AC in the Feature, the skill MUST apply the heuristic in [`shared/rehearse-heuristic.md`](../../../../skills/shared/rehearse-heuristic.md). When the AC is testable (CLI, HTTP, pure function, data, UI selector, filesystem, or event surface), the skill MUST scaffold `spec/features/<slug>/_tests/<scenario-slug>.md` with `status: pending`. When the AC is not testable, the skill MUST record the skip-reason in the Feature `README.md` under a `## Rehearse Integration` subsection.
+For every AC in the Feature, the skill MUST apply the heuristic in [`shared/rehearse-heuristic.md`](../../../../skills/shared/rehearse-heuristic.md). When the AC is testable (CLI, HTTP, pure function, data, UI selector, filesystem, or event surface), the skill MUST scaffold `spec/features/<slug>/_tests/<scenario-slug>.md` with `**Status:** pending` body metadata. When the AC is not testable, the skill MUST record the skip-reason in the Feature `README.md` under a `## Rehearse Integration` subsection.
 
 #### REQ: user-can-override-rehearse
 
@@ -271,9 +271,9 @@ The skill cannot invoke `writing-plans` or any implementation skill until the Fe
 
 ### AC: artifact-conformance
 
-**Requirements:** specify#req:artifact-path, specify#req:no-docs-path, specify#req:auto-create-features-dir, specify#req:auto-stage-on-create, specify#req:artifact-structure, specify#req:feature-schema-conformance, specify#req:requirement-front-matter, specify#req:ac-format
+**Requirements:** specify#req:artifact-path, specify#req:no-docs-path, specify#req:auto-create-features-dir, specify#req:auto-stage-on-create, specify#req:artifact-structure, specify#req:feature-schema-conformance, specify#req:requirement-format, specify#req:ac-format
 
-Every produced Feature lives under `spec/features/<slug>/` with the canonical multi-file structure (README + requirements/ + optional _tests/, assets/), conforms to the SpecScore Feature schema, has front-matter with the right shape on both the Feature README and each requirement file, and uses `Given / When / Then` for every AC. When `spec/features/` does not exist, the skill bootstraps it (with a lint-clean index) and tells the user. All created files are staged in git; the skill never commits.
+Every produced Feature lives under `spec/features/<slug>/` as a single canonical `README.md` (plus optional `_tests/`, `assets/`), conforms to the SpecScore Feature schema, has body metadata with the required fields, decomposes behavior into inline `#### REQ: <slug>` requirements scoped under `### <Topic>` headings inside `## Behavior`, and uses `Given / When / Then` for every AC. When `spec/features/` does not exist, the skill bootstraps it (with a lint-clean index) and tells the user. All created files are staged in git; the skill never commits.
 
 ### AC: source-idea-linkage
 
@@ -285,7 +285,7 @@ When a Feature originates from one or more approved Ideas, the Feature declares 
 
 **Requirements:** specify#req:cli-preferred, specify#req:fallback-direct-write
 
-When a `specscore new feature` (or equivalent) CLI is on PATH, the skill uses it; otherwise it falls back to direct write. Both paths produce schema-equivalent Features (identical front-matter, sections, required content) — cosmetic differences are allowed.
+When a `specscore new feature` (or equivalent) CLI is on PATH, the skill uses it; otherwise it falls back to direct write. Both paths produce schema-equivalent Features (identical title prefix, body-metadata fields, sections, required content) — cosmetic differences are allowed.
 
 ### AC: lint-and-recovery
 
@@ -309,7 +309,7 @@ The skill detects approval in two tiers: explicit phrases (English set + semanti
 
 **Requirements:** specify#req:rehearse-per-ac-decision, specify#req:user-can-override-rehearse
 
-Every AC has a recorded Rehearse decision: either a scaffolded stub at `spec/features/<slug>/_tests/<scenario-slug>.md` with `status: pending`, or a documented skip-reason under `## Rehearse Integration` in the Feature README. The user can override either direction with reasoning.
+Every AC has a recorded Rehearse decision: either a scaffolded stub at `spec/features/<slug>/_tests/<scenario-slug>.md` with `**Status:** pending` body metadata, or a documented skip-reason under `## Rehearse Integration` in the Feature README. The user can override either direction with reasoning.
 
 ### AC: lifecycle-events
 

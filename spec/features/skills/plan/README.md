@@ -11,7 +11,7 @@ The `specstudio:plan` skill is intended to turn an approved SpecScore Feature in
 
 ## Problem
 
-`specstudio:specify` produces lint-clean Features with G/W/T acceptance criteria. The next step — decomposing those ACs into ordered, executable tasks — currently has no SpecStudio skill. Users fall back to generic planning skills (`superpowers:writing-plans`, `agent-skills:planning-and-task-breakdown`), which are SpecScore-blind: they do not consume Feature front-matter, do not map tasks to AC IDs, do not lint, and do not emit Synchestra events.
+`specstudio:specify` produces lint-clean Features with G/W/T acceptance criteria. The next step — decomposing those ACs into ordered, executable tasks — currently has no SpecStudio skill. Users fall back to generic planning skills (`superpowers:writing-plans`, `agent-skills:planning-and-task-breakdown`), which are SpecScore-blind: they do not consume Feature body metadata, do not map tasks to AC IDs, do not lint, and do not emit Synchestra events.
 
 The result is that spec↔code coherence — the central SpecStudio principle — breaks at exactly the handoff where it matters most: the moment ACs become work.
 

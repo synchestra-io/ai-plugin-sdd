@@ -4,12 +4,12 @@
 
 ## Steps
 
-GIVEN an Idea at `spec/ideas/my-idea.md` with `status: Draft`
+GIVEN an Idea at `spec/ideas/my-idea.md` with `**Status:** Draft` body metadata
 AND the skill has presented the lint-clean artifact for user review
 WHEN the user responds with the standalone phrase `approve` (or `Approved`, `APPROVE`, `approve.`, etc.)
 THEN the skill recognizes the response as an explicit approval
 AND the skill does NOT ask for additional confirmation
-AND the skill transitions the front-matter `status` from `Draft` to `Approved`
+AND the skill transitions the `**Status:**` body-metadata value from `Draft` to `Approved`
 AND the skill re-runs `specscore lint`
 AND the skill emits `idea.approved`
 

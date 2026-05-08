@@ -56,7 +56,7 @@ The skill MUST NOT write Idea artifacts to `docs/ideas/`, `notes/`, or any path 
 
 #### REQ: auto-create-ideas-dir
 
-When invoked in a project that does not yet have a `spec/ideas/` directory, the skill MUST create the directory and an empty `spec/ideas/README.md` index file before writing the first artifact. The auto-created index MUST be lint-clean (`type: index` schema, empty Contents table, "None at this time." Outstanding Questions). Auto-creation MUST NOT happen silently — the skill MUST tell the user it is bootstrapping the directory.
+When invoked in a project that does not yet have a `spec/ideas/` directory, the skill MUST create the directory and an empty `spec/ideas/README.md` index file before writing the first artifact. The auto-created index MUST be lint-clean per the canonical SpecScore Ideas Index spec (title `# Ideas Index`, `**Status:** Stable`, empty Contents table, "None at this time." Outstanding Questions, adherence footer). Auto-creation MUST NOT happen silently — the skill MUST tell the user it is bootstrapping the directory.
 
 #### REQ: auto-stage-on-create
 
@@ -96,7 +96,7 @@ When the `specscore` CLI is NOT on PATH, the skill MUST fall back to a direct fi
 
 #### REQ: schema-equivalence-cli-fallback
 
-CLI and fallback paths MUST produce **schema-equivalent** artifacts: identical front-matter fields, identical section headings, identical required content. They MAY differ in cosmetic ways (whitespace, blank-line counts, comment style, default ordering of optional fields). The contract is that downstream consumers (`specscore lint`, `specstudio:specify`, human readers) cannot tell which path produced the artifact based on its functional content.
+CLI and fallback paths MUST produce **schema-equivalent** artifacts: identical title prefix, identical body-metadata fields, identical section headings, identical required content. They MAY differ in cosmetic ways (whitespace, blank-line counts, comment style, default ordering of optional fields). The contract is that downstream consumers (`specscore lint`, `specstudio:specify`, human readers) cannot tell which path produced the artifact based on its functional content.
 
 ### Required artifact content
 
@@ -155,11 +155,11 @@ When the user's response signals positive sentiment but does not contain a recog
 
 #### REQ: status-transition-under-review
 
-When the skill first presents the lint-clean Idea to the user for review, the skill MUST update the artifact's front-matter `status` from `Draft` to `Under Review`. Subsequent edits during user iteration keep `status: Under Review` until either the user approves (→ `Approved`) or explicitly drops back to `Draft` for substantial rework.
+When the skill first presents the lint-clean Idea to the user for review, the skill MUST update the artifact's `**Status:**` body-metadata line from `Draft` to `Under Review`. Subsequent edits during user iteration keep `**Status:** Under Review` until either the user approves (→ `Approved`) or explicitly drops back to `Draft` for substantial rework.
 
 #### REQ: status-transition-on-approval
 
-On confirmed user approval (per `approval-explicit-phrase` or `approval-vague-confirmation`), the skill MUST update the artifact's front-matter `status` from `Under Review` to `Approved` and re-run lint to confirm the transition is still valid.
+On confirmed user approval (per `approval-explicit-phrase` or `approval-vague-confirmation`), the skill MUST update the artifact's `**Status:**` body-metadata line from `Under Review` to `Approved` and re-run lint to confirm the transition is still valid.
 
 ### Event emission
 
@@ -167,7 +167,7 @@ The skill participates in the Synchestra event vocabulary defined in [`shared/sy
 
 #### REQ: event-drafted
 
-While the artifact's front-matter `status` is `Draft`, the skill MUST emit `idea.drafted` after every successful `specscore lint` pass that follows a write or edit. The first emission carries the same event name as subsequent ones — Synchestra dedupes by event uuid.
+While the artifact's `**Status:**` is `Draft`, the skill MUST emit `idea.drafted` after every successful `specscore lint` pass that follows a write or edit. The first emission carries the same event name as subsequent ones — Synchestra dedupes by event uuid.
 
 #### REQ: event-approved
 
@@ -197,7 +197,7 @@ Promotion to a Feature is the responsibility of `specstudio:specify` and Synches
 
 #### REQ: no-manual-promotes-to
 
-The skill MUST NOT manually edit the `promotes_to` front-matter field. That field is managed by Synchestra in response to a Feature declaring its `Source Ideas`.
+The skill MUST NOT manually edit the `**Promotes To:**` body-metadata line. That line is managed by Synchestra in response to a Feature declaring this Idea in its `**Source Ideas:**` line.
 
 #### REQ: promotion-out-of-scope
 
@@ -242,13 +242,13 @@ The skill executes the three-phase dialogue in order. Phase 1 produces a HMW res
 
 **Requirements:** ideate#req:cli-preferred, ideate#req:cli-flag-discipline, ideate#req:fallback-direct-write, ideate#req:schema-equivalence-cli-fallback
 
-The skill probes for the `specscore` CLI once per invocation. When present, scaffolding goes through `specscore new idea <slug>` with only documented flags. When absent, the skill writes the artifact directly using the authoritative schema. Both paths produce schema-equivalent artifacts — identical front-matter, identical sections, identical required content — though they MAY differ in cosmetic ways (whitespace, blank lines, comment style).
+The skill probes for the `specscore` CLI once per invocation. When present, scaffolding goes through `specscore new idea <slug>` with only documented flags. When absent, the skill writes the artifact directly using the authoritative schema. Both paths produce schema-equivalent artifacts — identical title prefix, identical body-metadata fields, identical sections, identical required content — though they MAY differ in cosmetic ways (whitespace, blank lines, comment style).
 
 ### AC: lifecycle-events
 
 **Requirements:** ideate#req:event-drafted, ideate#req:event-approved, ideate#req:event-updated, ideate#req:event-payload-change-context, ideate#req:change-summary-discipline, ideate#req:status-transition-on-approval
 
-While `status: Draft`, every successful lint pass after a write/edit emits `idea.drafted`. On confirmed user approval, the front-matter transitions Draft → Approved, lint is re-run, and `idea.approved` is emitted exactly once. While `status: Approved`, every successful lint pass after a subsequent write/edit emits `idea.updated` (never `idea.drafted` and never a second `idea.approved`). Both `idea.drafted` and `idea.updated` payloads carry `changed_sections`, `previous_revision`, and `change_summary` (null on the first `idea.drafted`, non-null thereafter); the `change_summary` is factual and bounded to two sentences. Skipping, reordering, misclassifying, or generating speculative/editorializing summaries is a contract violation.
+While `**Status:** Draft`, every successful lint pass after a write/edit emits `idea.drafted`. On confirmed user approval, `**Status:**` transitions Draft → Approved, lint is re-run, and `idea.approved` is emitted exactly once. While `**Status:** Approved`, every successful lint pass after a subsequent write/edit emits `idea.updated` (never `idea.drafted` and never a second `idea.approved`). Both `idea.drafted` and `idea.updated` payloads carry `changed_sections`, `previous_revision`, and `change_summary` (null on the first `idea.drafted`, non-null thereafter); the `change_summary` is factual and bounded to two sentences. Skipping, reordering, misclassifying, or generating speculative/editorializing summaries is a contract violation.
 
 ### AC: approval-detection
 
@@ -272,7 +272,7 @@ When the user can articulate the problem, recommended direction, and Not-Doing b
 
 **Requirements:** ideate#req:no-manual-promotes-to, ideate#req:promotion-out-of-scope
 
-The skill never edits `promotes_to`, never scaffolds a Feature, and never modifies an existing Feature. Promotion requests are routed to `specstudio:specify`.
+The skill never edits `**Promotes To:**`, never scaffolds a Feature, and never modifies an existing Feature. Promotion requests are routed to `specstudio:specify`.
 
 ## Outstanding Questions
 

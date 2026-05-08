@@ -4,7 +4,7 @@
 
 ## Steps
 
-GIVEN an Idea at `spec/ideas/my-idea.md` with `status: Draft`
+GIVEN an Idea at `spec/ideas/my-idea.md` with `**Status:** Draft` body metadata
 AND the skill has presented the lint-clean artifact for user review
 WHEN the user responds with a vague positive signal (e.g., "looks good", "yeah", "nice", "ship it", "lgtm")
 THEN the skill MUST NOT silently transition the status
@@ -19,7 +19,7 @@ AND the skill emits `idea.approved`
 GIVEN the skill has asked the confirmation question
 WHEN the user declines or asks for changes
 THEN the skill MUST NOT transition the status
-AND the front-matter `status` remains `Draft`
+AND the `**Status:**` body-metadata value remains `Draft`
 
 ---
 *This document follows the https://specscore.md/scenario-specification*

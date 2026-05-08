@@ -41,7 +41,7 @@ This is a single-source-of-truth choice: the skill is a faithful **event source*
 ## Events Emitted by `specstudio:ideate`
 
 ### `idea.drafted`
-Fired after every successful `specscore lint` pass following a write or edit, while the Idea's front-matter `status` is `Draft`. The first emission carries the same event name as subsequent ones — Synchestra dedupes by event uuid.
+Fired after every successful `specscore lint` pass following a write or edit, while the Idea's `**Status:**` is `Draft`. The first emission carries the same event name as subsequent ones — Synchestra dedupes by event uuid.
 
 ```yaml
 payload:
@@ -70,7 +70,7 @@ payload:
 **Consumer:** Synchestra may react by scheduling `specstudio:specify` (after user confirmation) or by notifying watchers.
 
 ### `idea.updated`
-Fired after every successful `specscore lint` pass following a write or edit, while the Idea's front-matter `status` is `Approved`. Distinguishes post-approval iteration from pre-approval drafting; consumers that watch only for material changes to approved Ideas subscribe here rather than to `idea.drafted`.
+Fired after every successful `specscore lint` pass following a write or edit, while the Idea's `**Status:**` is `Approved`. Distinguishes post-approval iteration from pre-approval drafting; consumers that watch only for material changes to approved Ideas subscribe here rather than to `idea.drafted`.
 
 ```yaml
 payload:
@@ -108,7 +108,7 @@ payload:
 The change-context fields (`changed_sections`, `previous_revision`, `change_summary`) follow the same semantics and discipline as on `idea.drafted` / `idea.updated` (see above). They are `null` on the first `feature.specified` emission for a Feature (no prior revision to diff against). On every subsequent emission during reviewer iteration, they are present and non-null.
 
 ### `feature.approved`
-Fired exactly once, after the user explicitly approves the written Feature and the status transition Draft → In Progress completes successfully.
+Fired exactly once, after the user explicitly approves the written Feature and the status transition Under Review → Approved completes successfully.
 
 ```yaml
 payload:
@@ -121,7 +121,7 @@ payload:
 The change-context fields are never `null` here — the prior revision is the last `feature.specified` emission.
 
 ### `feature.updated`
-Fired after every successful `specscore lint` pass following a write or edit, while the Feature's front-matter `status` is `In Progress` or `Stable`. Distinguishes post-approval iteration from pre-approval drafting; consumers that watch only for material changes to approved Features subscribe here rather than to `feature.specified`.
+Fired after every successful `specscore lint` pass following a write or edit, while the Feature's `**Status:**` is `Implementing` or `Stable`. Distinguishes post-approval iteration from pre-approval drafting; consumers that watch only for material changes to approved Features subscribe here rather than to `feature.specified`.
 
 ```yaml
 payload:
@@ -138,7 +138,7 @@ payload:
 ### `idea.implementing`
 Fired by Synchestra (not by a skill) when the **first** Feature is created (or transitioned out of `Stable`) whose `**Source Ideas:**` field references an Idea's slug. Synchestra:
 
-1. Transitions the Idea's `status: Approved → Implementing`.
+1. Transitions the Idea's `**Status:** Approved → Implementing`.
 2. Populates (or updates) the Idea's `**Promotes To:**` with the list of Feature slugs.
 3. Commits the updated Idea artifact.
 4. Emits `idea.implementing`.
@@ -152,7 +152,7 @@ payload:
 ### `idea.specified`
 Fired by Synchestra (not by a skill) when **every** Feature listed in an Idea's `**Promotes To:**` reaches `Status: Stable`. Synchestra:
 
-1. Transitions the Idea's `status: Implementing → Specified`.
+1. Transitions the Idea's `**Status:** Implementing → Specified`.
 2. Commits the updated Idea artifact.
 3. Emits `idea.specified`.
 
@@ -176,9 +176,9 @@ This is a stricter event than the previous `idea.specified` (which fired on firs
 
 | Event | Emitter | Trigger |
 |---|---|---|
-| `idea.drafted` | `specstudio:ideate` | Every successful lint pass while `status: Draft` |
+| `idea.drafted` | `specstudio:ideate` | Every successful lint pass while `**Status:** Draft` |
 | `idea.approved` | `specstudio:ideate` | User approves Recommended Direction (exactly once) |
-| `idea.updated` | `specstudio:ideate` | Every successful lint pass while `status: Approved` |
+| `idea.updated` | `specstudio:ideate` | Every successful lint pass while `**Status:** Approved` |
 | `idea.implementing` | synchestra | First Feature created with this Idea in `**Source Ideas:**` (Approved → Implementing) |
 | `idea.specified` | synchestra | Every Feature referencing this Idea reaches `Status: Stable` (Implementing → Specified) |
 | `feature.specified` | `specstudio:specify` | Reviewer-approved, lint-clean Feature write |

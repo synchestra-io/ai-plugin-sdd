@@ -19,7 +19,7 @@ Turn approved intent into a lintable, testable SpecScore Feature.
 
 <HARD-GATE>
 Do NOT invoke `writing-plans`, `frontend-design`, `mcp-builder`, or ANY implementation skill until ALL of the following are true:
-  1. The Feature artifact exists at `spec/features/<slug>/README.md` plus at least one `spec/features/<slug>/requirements/*.md`.
+  1. The Feature artifact exists at `spec/features/<slug>/README.md` and contains at least one `#### REQ: <slug>` requirement inside the `## Behavior` section.
   2. Each requirement has ≥1 acceptance criterion in `Given / When / Then` format.
   3. `specscore lint spec/features/<slug>/` passes.
   4. The spec-document reviewer subagent returned `Approved`.
@@ -42,7 +42,7 @@ Every Feature goes through this. A toggle, a one-line config, a single utility �
 
 1. **Inputs check.** If triggered from an approved Idea, load it and list the Idea's assumptions that this Feature must validate. If no Idea exists, ask: "Is this ready to specify, or should we ideate first?" — don't force `specstudio:ideate` on high-conviction users.
 2. **Scope decomposition.** If the intent spans multiple independent subsystems, stop and help the user decompose into multiple Features before continuing.
-3. **Revision vs new.** If a Feature with this slug already exists, decide: revise in place (default) or create a successor with `supersedes:` (only when scope change invalidates existing ACs). See [path-conventions.md](../shared/path-conventions.md).
+3. **Revision vs new.** If a Feature with this slug already exists, decide: revise in place (default) or create a successor and set `**Supersedes:** <old-slug>` in the new Feature's body metadata (only when scope change invalidates existing ACs). See [path-conventions.md](../shared/path-conventions.md).
 
 ## Checklist
 
@@ -54,7 +54,7 @@ Create a task for each and complete in order:
 4. **Ask clarifying questions** — one at a time, multiple-choice preferred. See [question-cadence.md](../shared/question-cadence.md).
 5. **Propose 2–3 approaches** with trade-offs; lead with your recommendation. Use `specstudio:ideate` lenses (inversion, constraint removal, simplification) where useful.
 6. **Present spec sections** one at a time, get approval after each.
-7. **Author the Feature artifact** — `README.md` + `requirements/*.md`.
+7. **Author the Feature artifact** — single `README.md` with topic-grouped `### <Topic>` headings inside `## Behavior`, each containing one or more `#### REQ: <slug>` requirements.
 8. **Rehearse stub decision** — per-AC heuristic. See [rehearse-heuristic.md](../shared/rehearse-heuristic.md).
 9. **Lint** — `specscore lint spec/features/<slug>/`.
 10. **Inline self-review** — placeholders, consistency, scope, ambiguity.
@@ -74,57 +74,86 @@ Create a task for each and complete in order:
 - **Not Doing / Out of Scope** — inherited from Idea + spec-level cuts.
 - **Assumption carryover** — which Idea assumptions survive; which are now invalidated or answered.
 
-## Artifact Layout and Front-Matter
+## Artifact Layout
+
+The schema follows canonical SpecScore: title prefix `# Feature: …` is the dispatch key, body metadata is bold-prefixed lines immediately after the title, requirements are inline `#### REQ: <slug>` sub-headings under topic `### <Topic>` headings inside `## Behavior` — **no YAML front-matter, no separate requirement files**.
 
 ```
 spec/features/<slug>/
-├── README.md                # Feature overview + front-matter
-├── requirements/
-│   ├── <req-1-slug>.md
-│   ├── <req-2-slug>.md
+├── README.md                # The Feature artifact (single file)
+├── _tests/                  # Optional — Rehearse scenarios (see shared/rehearse-heuristic.md)
+│   ├── <scenario-1>.md
 │   └── …
-├── assets/                  # Optional — diagrams, mockups (see Q11.1)
-└── tests/                   # Optional — Rehearse stubs (see shared/rehearse-heuristic.md)
+└── assets/                  # Optional — diagrams, mockups
 ```
 
-**`README.md` front-matter:**
+**`README.md` schema (authoritative):**
 
-```yaml
----
-type: feature
-id: feat-<slug>
-status: Draft
-date: YYYY-MM-DD
-owner: <author>
-source_idea: idea-<slug>     # null if no originating Idea
-supersedes: []               # set only on wholesale replacement
----
-```
+```markdown
+# Feature: <Title>
 
-**Requirement file front-matter:**
+**Status:** Draft
+**Date:** YYYY-MM-DD
+**Owner:** <author identifier>
+**Source Ideas:** —              <!-- or: <idea-slug>, <idea-slug> when this Feature originates from one or more Ideas -->
+**Supersedes:** —                <!-- or: <old-feature-slug> on wholesale replacement -->
 
-```yaml
----
-type: requirement
-id: req-<feat-slug>-<req-slug>
-feature: feat-<slug>
-status: Draft
----
+## Summary
 
-# <Requirement name>
+1–3 sentences. What this Feature is and who it serves.
 
-<One-paragraph description>
+## Problem
+
+Why this Feature exists. What gap or pain it addresses.
+
+## Behavior
+
+How the Feature works. Topics use `###` headings; individual rules use `#### REQ: <slug>` under their topic.
+
+### <Topic-1>
+
+Narrative context for this group of rules.
+
+#### REQ: <req-slug-1>
+
+The system MUST/MAY/SHOULD … (one enforceable rule, prose).
+
+#### REQ: <req-slug-2>
+
+…
+
+### <Topic-2>
+
+…
 
 ## Acceptance Criteria
 
-### AC-1: <name>
+Each REQ has ≥1 AC in `Given / When / Then` form. ACs may be inline under each REQ or grouped here with explicit REQ back-references — both forms are valid; pick one and be consistent.
+
+### AC: <ac-slug-1> (verifies REQ:<req-slug-1>)
+
 **Given** <precondition>
 **When** <action>
 **Then** <observable outcome>
 
-### AC-2: <name>
+### AC: <ac-slug-2> (verifies REQ:<req-slug-2>)
+
 …
+
+## Outstanding Questions
+
+- <Open question that doesn't block approval but should be tracked>
+
+(Or: "None at this time." — the section is never omitted.)
+
+---
+*This document follows the https://specscore.md/feature-specification*
 ```
+
+Notes:
+- The canonical id is the directory slug; there is no separate `id` field.
+- `**Source Ideas:**` and `**Supersedes:**` MUST be present with value `—` when empty.
+- Topics inside `## Behavior` MUST have a `###` heading; requirements (`#### REQ:`) MUST be scoped under a topic — never directly under `## Behavior`.
 
 ## Acceptance Criterion Format
 
@@ -143,7 +172,7 @@ If you can't phrase an outcome as `Then <observable>`, the AC is too abstract �
 
 After drafting ACs, for each one apply the heuristic in [rehearse-heuristic.md](../shared/rehearse-heuristic.md):
 
-- **Testable** (has CLI/HTTP/pure-fn/data/UI-selector/fs/event surface): scaffold `spec/features/<slug>/tests/<req-id>-<ac-id>.md` with `status: pending`.
+- **Testable** (has CLI/HTTP/pure-fn/data/UI-selector/fs/event surface): scaffold `spec/features/<slug>/_tests/<req-slug>-<ac-slug>.md` with `**Status:** pending` body metadata.
 - **Not testable** (subjective, abstract, undefined observer, doc-only Feature): skip; record reason in the Feature's `README.md` under `## Rehearse Integration`.
 
 The user can always override the heuristic.
@@ -172,7 +201,7 @@ After reviewer subagent returns `Approved`:
 Wait. If the user requests changes, fix, re-lint, re-review, re-gate. Only proceed once the user approves.
 
 On approval:
-- Update `status: Draft → Approved`.
+- Update `**Status:** Under Review → Approved` in the body metadata.
 - Re-run lint.
 - Emit `feature.approved` event.
 
@@ -195,15 +224,15 @@ If the user has `obra/superpowers` installed, we may reuse its browser-based vis
 ## Verification
 
 - [ ] `spec/features/<slug>/README.md` exists
-- [ ] At least one requirement file under `requirements/`
+- [ ] `## Behavior` contains at least one `#### REQ: <slug>` requirement (scoped under a `###` topic heading)
 - [ ] Every requirement has ≥1 acceptance criterion
 - [ ] Every AC is `Given / When / Then`
 - [ ] `specscore lint spec/features/<slug>/` passes
 - [ ] Reviewer subagent returned `Approved`
 - [ ] User explicitly approved the written Feature
-- [ ] `status: Approved` in front-matter
+- [ ] `**Status:** Approved` in body metadata
 - [ ] Rehearse decision recorded (stubs scaffolded OR skip-reason noted)
-- [ ] Source Idea (if any) linked via `source_idea:` — Synchestra handles the reverse link
+- [ ] Source Idea (if any) linked via the `**Source Ideas:**` body-metadata line — Synchestra handles the reverse link
 - [ ] `feature.specified` + `feature.approved` events emitted
 
 ## Red Flags

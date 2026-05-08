@@ -11,7 +11,7 @@ After the Feature's acceptance criteria are drafted, the skill asks for each AC:
 
 > "Does this AC describe an observable outcome that a Rehearse script can automate?"
 
-If the answer is yes for **any** AC, the skill scaffolds stub test files (one per testable AC), marked `status: pending`.
+If the answer is yes for **any** AC, the skill scaffolds stub Scenario files (one per testable AC) following the canonical SpecScore Scenario format. The "pending" state is signaled by a `## TODO` checklist in the body — not by a status field, since canonical Scenarios do not carry one.
 
 If the answer is no for all ACs, the skill skips stub generation and records in the Feature's `README.md`:
 
@@ -48,33 +48,34 @@ Any of these makes automation impractical:
 One file per testable AC, placed at:
 
 ```
-spec/features/<slug>/tests/<requirement-id>-<ac-id>.md
+spec/features/<slug>/_tests/<requirement-slug>-<ac-slug>.md
 ```
 
-Stub body:
+Stub body (canonical SpecScore Scenario form):
 
 ```markdown
----
-type: rehearse-stub
-id: <requirement-id>-<ac-id>
-feature: <feature-slug>
-status: pending
----
+# Scenario: <AC name>
 
-# <AC name>
+**Validates:** [<feature-slug>#req:<requirement-slug>](../README.md#req-<requirement-slug>)
 
-## Scenario
-Given <precondition>
-When <action>
-Then <observable outcome>
+## Steps
+
+GIVEN <precondition>
+WHEN <action>
+THEN <observable outcome>
 
 ## Detected Surface
+
 <cli | http | pure-function | data | ui | fs | event>
 
 ## TODO
+
 - [ ] Pick Rehearse driver
 - [ ] Wire up fixtures
 - [ ] Implement assertion
+
+---
+*This document follows the https://specscore.md/scenario-specification*
 ```
 
 ## Tuning

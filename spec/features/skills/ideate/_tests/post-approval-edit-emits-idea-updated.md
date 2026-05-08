@@ -4,14 +4,14 @@
 
 ## Steps
 
-GIVEN an Idea at `spec/ideas/my-idea.md` with front-matter `status: Approved`
+GIVEN an Idea at `spec/ideas/my-idea.md` with `**Status:** Approved` body metadata
 AND `idea.approved` was previously emitted exactly once
 WHEN the user edits the artifact (e.g., refines the Recommended Direction)
 AND `specscore lint spec/ideas/my-idea.md` passes after the edit
 THEN the skill emits `idea.updated`
 AND the skill does NOT emit `idea.drafted`
 AND the skill does NOT re-emit `idea.approved`
-AND the front-matter `status` remains `Approved`
+AND the `**Status:**` body-metadata value remains `Approved`
 
 GIVEN the same Approved Idea is edited multiple times in succession, each edit followed by a passing lint
 WHEN the skill processes each edit
