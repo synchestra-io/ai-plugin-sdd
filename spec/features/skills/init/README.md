@@ -166,7 +166,9 @@ When `synchestra` is missing AND the user declined to install it (per `synchestr
 
 #### REQ: synchestra-cli-contract-dependency
 
-The init Feature depends on the upstream `synchestra init` CLI subcommand contract (flag set, exit codes, idempotence guarantees). When the upstream contract changes, this Feature revises in place to match. If the upstream `synchestra init` does not exist at the time of MVP shipping, the synchestra-side bootstrap is degraded: the skill reports "synchestra orchestration setup deferred — upstream `synchestra init` not yet shipped" and continues with the specscore-side bootstrap. The user is informed; no error.
+The init Feature depends on the upstream `synchestra init` CLI subcommand contract (flag set, exit codes, idempotence guarantees) defined by [`synchestra@spec/features/cli/init/`](https://github.com/synchestra-io/synchestra/blob/main/spec/features/cli/init/README.md). When the upstream contract changes, this Feature revises in place to match. The contract guarantees: `synchestra init` writes a dedicated `synchestra.yaml` at the repo root (per the [synchestra repo-config Feature](https://github.com/synchestra-io/synchestra/blob/main/spec/features/repo-config/README.md)) — synchestra-only orchestration metadata lives in its own file, NOT as extension keys inside `specscore.yaml`. The two files compose without duplication; the skill never writes synchestra fields into specscore.yaml.
+
+The upstream `synchestra init` v1 implements only `--state-mode embedded`; `--state-mode separate-repo` and `--state-mode hub-managed` are recognized but exit 2 with a "not yet implemented" message. When the user requests an unimplemented mode, the skill MUST treat that exit as a soft failure and either fall back to embedded mode (with the user's explicit consent) or report degradation and continue. When `synchestra` is absent (declined install), the synchestra-side bootstrap degrades per `ai-agent-fallback-synchestra`.
 
 ### Idempotence and event emission
 
