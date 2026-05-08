@@ -82,9 +82,9 @@ Full detail: [`../ideate-vs-brainstorming-skills-analysis.md`](../ideate-vs-brai
 
 - **Same divergent/convergent shape, mandatory artifact.** SpecStudio's `ideate` keeps the 3-phase structure and the framework library (SCAMPER, HMW, JTBD, …) — but makes the Idea artifact mandatory and lint-clean instead of an optional save.
 - **Promotion graph.** agent-skills' `docs/ideas/<name>.md` is a one-pager dead-end; SpecStudio Ideas have a `promotes_to` field that Synchestra populates when Features are born from them, so the lineage stays queryable.
-- **Reference checklists and personas as future work.** agent-skills' OWASP / WCAG / Core Web Vitals reference docs and `code-reviewer` / `security-auditor` / `test-engineer` personas are real assets we don't yet match; see action items in [`skills-ecosystem-analysis.md`](skills-ecosystem-analysis.md).
+- **Reference checklists and personas as future work.** agent-skills' OWASP / WCAG / Core Web Vitals reference docs and `code-reviewer` / `security-auditor` / `test-engineer` personas are real assets we don't yet match; see action items in [`superpowers-and-agent-skills-analysis.md`](superpowers-and-agent-skills-analysis.md).
 
-Full detail: [`skills-ecosystem-analysis.md`](skills-ecosystem-analysis.md).
+Full detail: [`superpowers-and-agent-skills-analysis.md`](superpowers-and-agent-skills-analysis.md).
 
 ---
 
@@ -106,8 +106,8 @@ Each pair-wise comparison surfaces different decisions. Folding them together wo
 | Competitor | What it is | Comparison docs |
 |---|---|---|
 | **github/spec-kit** | GitHub's official Python CLI for SDD; 7-stage slash-command funnel; plugin API; ~92k★, MIT | [`github-spec-kit/README.md`](github-spec-kit/README.md) (product-level), [`github-spec-kit/vs-specstudio-skills.md`](github-spec-kit/vs-specstudio-skills.md) (skill-layer), [`github-spec-kit/extension-integration.md`](github-spec-kit/extension-integration.md) (manifest-level) |
-| **obra/superpowers** (`brainstorming`) | Pre-implementation gating skill with `<HARD-GATE>`, one-question-at-a-time, reviewer subagent, visual companion | [`skills-ecosystem-analysis.md`](skills-ecosystem-analysis.md) (joint dossier with agent-skills); [`../ideate-vs-brainstorming-skills-analysis.md`](../ideate-vs-brainstorming-skills-analysis.md) (skill-layer detail vs. `specstudio:ideate`/`specstudio:specify`) |
-| **addyosmani/agent-skills** | 21 skills across 6 SDLC phases, anti-rationalization tables, reference checklists, agent personas | [`skills-ecosystem-analysis.md`](skills-ecosystem-analysis.md) (joint dossier with Superpowers) |
+| **obra/superpowers** (`brainstorming`) | Pre-implementation gating skill with `<HARD-GATE>`, one-question-at-a-time, reviewer subagent, visual companion | [`superpowers-and-agent-skills-analysis.md`](superpowers-and-agent-skills-analysis.md) (joint dossier with agent-skills); [`../ideate-vs-brainstorming-skills-analysis.md`](../ideate-vs-brainstorming-skills-analysis.md) (skill-layer detail vs. `specstudio:ideate`/`specstudio:specify`) |
+| **addyosmani/agent-skills** | 21 skills across 6 SDLC phases, anti-rationalization tables, reference checklists, agent personas | [`superpowers-and-agent-skills-analysis.md`](superpowers-and-agent-skills-analysis.md) (joint dossier with Superpowers) |
 
 ---
 

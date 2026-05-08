@@ -1,4 +1,4 @@
-# Skills Ecosystem Analysis: Superpowers + agent-skills (with SpecScore Lens)
+# Superpowers + agent-skills — Skill-Layer Analysis
 
 **Status:** Partially superseded — see status note below
 **Date:** 2026-04-09 (original); status note added 2026-05-08
